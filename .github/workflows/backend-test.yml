@@ -38,7 +38,17 @@ jobs:
         run: |
           chmod +x mvnw
           sed -i 's/\r$//' mvnw
-      - run: ./mvnw -B test -Dtest='!PostgresDeploymentSmokeIT'
+      - run: ./mvnw -B test
+
+      - name: Print Surefire reports on failure
+        if: failure()
+        run: |
+          for f in target/surefire-reports/*.txt; do
+            if [ -f "$f" ] && grep -q "FAILURE\|ERROR" "$f"; then
+              echo "=== $f ==="
+              cat "$f"
+            fi
+          done
 
       # Exercise production Flyway migrations and the PostgreSQL advisory-lock SQL.
       - name: Prepare restricted PostgreSQL app role
