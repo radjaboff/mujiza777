@@ -1,0 +1,565 @@
+﻿Mujiza 777 — Onlayn platforma:BackendTZ
+Muallif: Akmal · Sana: 2026-10-23 · Holat: 1-versiya (muhokama uchun)
+1. Loyiha maqsadi
+Qarshi shahridagi mashhur shirinlik do'koni Mujiza 777 uchun onlayn platforma yaratish:
+mijozlar mahsulotlarni saytda ko'radi, savatga qo'shadi va buyurtma beradi (olib ketish
+yoki yetkazib berish). Do'kon egasi admin panel orqali mahsulotlar, aksiyalar va
+buyurtmalarni o'zi boshqaradi.
+Misol sifatida olingan saytlar: axmad.uz (saytdan buyurtma, savat, sevimlilar, filiallar,
+yetkazib berish va to'lov sahifalari) va safiabakery.uz (qandolatga mos dizayn, aksiyalar va
+yangiliklar, maxsus tort buyurtmasi).
+2. Raqobattahlili va bizning ustunlik
+Mujiza 777 Axmad'ning savdo funksiyalarini Safia'ning qandolatga xos uslubi bilan
+birlashtiradi va ikkalasida ham ko'rinmagan imkoniyatlar qo'shadi. Jadval ikkala saytning
+ko'rib chiqilgan sahifalari asosida tuzilgan.
+Imkoniyat axmad.uz safiabakery.uz Mujiza 777
+Saytdan savat va
+buyurtma
+Bor Saytda yo'q, mobil
+ilova orqali
+Bor
+Olib ketish va yetkazib
+berish tanlovi
+Bor Saytda ko'rinmadi Bor
+Aksiyalar va yangiliklar Bor Bor Bor, taymerli Kun taklifi
+bilan
+Filiallar Bor Bor Bor, xarita bilan
+Sevimlilar Bor Saytda ko'rinmadi Bor
+Tavsiya bloki Tavsiya
+etamiz
+O'xshash
+mahsulotlar
+Birga olinadi
+(buyurtmalar tahlili
+asosida)
+Buyurtma bo'yicha
+yo'riqnoma
+Yo'q Maqolalar Interaktiv tort
+konstruktori
+Sodiqlik dasturi Saytda
+ko'rinmadi
+Coins, keshbek,
+referal
+Promo kodlar, keyin ballar
+va referal
+Mujiza 777 — Backend TZ
+Page 1 of 15
+Qoida: funksiyalarni Axmad'dan, did va kontent uslubini Safia'dan, g'oyalarni o'zimizdan
+olamiz.
+3. Foydalanuvchilar
+Mijoz: ro'yxatdan o'tmasdan (mehmon sifatida) mahsulotlarni ko'radi va buyurtma
+beradi. Hisob ochish keyingi bosqichda.
+Admin (do'kon egasi / xodim): login orqali kiradi, hamma narsani boshqaradi.
+4.Wow imkoniyatlar
+Bu imkoniyatlar do'kon egasini hayratda qoldirish va saytni Axmad hamda Safia'dan ajratib
+turish uchun qo'shiladi. Ular uch darajaga bo'lingan: A birinchi chiqarishga kiradi, B ikkinchi
+bosqichda qo'shiladi, C kelajak uchun (13-bo'lim).
+A daraja: birinchi chiqarishga kiradi
+Imkoniyat axmad.uz safiabakery.uz Mujiza 777
+Keytering (katta
+buyurtma)
+Saytda
+ko'rinmadi
+Alohida bo'lim So'rov formasi
+Sovg'a sifatida
+yuborish
+Yo'q Yo'q Bor
+Buyurtmani kuzatish Saytda
+ko'rinmadi
+Saytda ko'rinmadi Jonli sahifa va Telegram
+xabarlari
+Tarkib va allergenlar Faqat vazn Tarkib bor Tarkib, allergen va filtrlar
+Imkoniyat Qanday ishlaydi Nega ta'sirli
+Tort konstruktori Mijoz tort turi, vazn, qatlam ta'mi,
+krem, bezak, yozuv va namuna
+rasmini tanlaydi, narx jonli
+hisoblanadi. So'rov adminga
+tushadi, admin yakuniy narxni
+tasdiqlaydi.
+Safia'da faqat yo'riqnoma
+maqolalari bor, bizda tayyor
+vosita. Telefonda uzoq
+gaplashish kamayadi.
+Sovg'a rejimi Buyurtmada Sovg'a sifatida
+belgilanadi: qabul qiluvchining
+ismi va telefoni, tabrik matni,
+kimdan ekanini yashirish tanlovi.
+Shirinlik ko'pincha sovg'a bo'ladi,
+namunalarda bu imkoniyat
+ko'rinmadi.
+Mujiza 777 — Backend TZ
+Page 2 of 15
+Imkoniyat Qanday ishlaydi Nega ta'sirli
+Jonli buyurtma
+kuzatuvi
+Buyurtmadan keyin noyob havola
+ochiladi: qabul qilindi,
+tayyorlanmoqda, tayyor, yo'lda,
+topshirildi. Sahifa o'zi yangilanadi,
+taxminiy tayyor bo'lish vaqti
+ko'rinadi. Telegramga ham xabar
+keladi.
+Mijoz buyurtmam nima bo'ldi
+deb qo'ng'iroq qilmaydi.
+Yetkazib berish vaqt
+oynalari
+Mijoz sana va vaqt oralig'ini
+tanlaydi (masalan, 14:00 dan 16:00
+gacha). Har oraliqda buyurtmalar
+soni cheklanadi, to'lgan oraliq
+band ko'rinadi.
+Do'kon ish yukini o'zi
+boshqaradi, kechikishlar
+kamayadi.
+Kun taklifi va flash
+aksiya
+Mahsulotda eski narx chizilgan,
+yangi narx va tugashigacha
+taymer ko'rinadi. Vaqt tugasa
+narx o'zi qaytadi.
+Shoshiltiradi va savdoni oshiradi.
+Promo kodlar Foiz yoki aniq summa, minimal
+buyurtma, muddat, foydalanish
+limiti, faqat birinchi buyurtma
+sharti.
+Instagram va Telegramdagi
+aksiyalar natijasini o'lchash
+mumkin.
+Aqlli tavsiyalar Mahsulot sahifasi va savatda
+Birga olinadi: o'tgan
+buyurtmalarda tez-tez birga
+olingan mahsulotlar.
+Bir buyurtmaning o'rtacha
+summasi oshadi.
+Tarkib va allergenlar Tarkib, kaloriya, saqlash muddati,
+allergen belgilari (yong'oq, sut,
+gluten, tuxum) va filtrlar:
+yong'oqsiz, shakarsiz.
+Ehtiyotkor mijozga ishonch
+beradi, xizmat darajasini
+ko'rsatadi.
+Tayyorlanish vaqti Har mahsulotda Hozir tayyor yoki
+2 soat oldin buyurtma belgisi,
+savatda eng uzoq tayyorlanish
+vaqti hisoblanadi.
+Mijoz kutish vaqtini oldindan
+biladi.
+Keytering so'rovi To'y va tadbirlar uchun forma:
+sana, mehmonlar soni, byudjet,
+istaklar.
+Safia'dagi keytering bo'limiga
+javob, katta buyurtmalar keladi.
+Mujiza 777 — Backend TZ
+Page 3 of 15
+Bdaraja: ikkinchi bosqich
+Tort konstruktori: ish jarayoni
+1. Mijoz tort turini tanlaydi (yumaloq, to'rtburchak, yurak, ko'p qavatli).
+2. Vaznni tanlaydi, har vaznga taxminiy porsiya soni ko'rsatiladi.
+Imkoniyat Qanday ishlaydi Nega ta'sirli
+Mavsumiy mavzular Admin bayramga (Navro'z, Hayit,
+8-mart, Yangi yil) banner va rang
+mavzusini bir tugma bilan
+almashtiradi.
+Sayt doim tirik ko'rinadi,
+dasturchi kerak emas.
+PWA va QR kod Sayt telefon ekraniga o'rnatiladi,
+do'kon peshtaxtasi va qadoqlarga
+QR kod qo'yiladi.
+Mobil ilova yo'qligi sezilmaydi.
+Ulashish Telegram va Instagramda
+mahsulot havolasi rasm, nom va
+narx bilan chiroyli ko'rinadi,
+Do'stingga yubor tugmasi bor.
+O'zbekistonda havolalar asosan
+shu yo'l bilan tarqaladi.
+Imkoniyat Qanday ishlaydi Nega ta'sirli
+Bayram eslatmasi Mijoz muhim sanani (tug'ilgan kun,
+to'y yilligi) saqlaydi, Telegram bot 3
+kun oldin eslatadi va tayyor
+buyurtma havolasini yuboradi.
+Mijoz o'zi qaytib keladi.
+Mujiza ballari Har buyurtmadan ball yig'iladi,
+keyingi xaridda ishlatiladi, referal
+(do'stingni taklif qil) bor.
+Safia'dagi sodiqlik dasturining
+sayt varianti.
+Sharhlar Mijoz baho va fikr qoldiradi, admin
+tasdiqlagach ko'rinadi.
+Ijtimoiy isbot, ishonch.
+Yetkazish hududlari Hududlar bo'yicha yetkazish narxi,
+xaritada manzil tanlash.
+Narx aniq, kuryer
+adashmaydi.
+Kuryer roli Kuryer Telegram orqali buyurtmani
+oladi va holatini belgilaydi.
+To'liq jarayon bir joyda.
+Shirinlik tanlash
+yordamchisi
+3-4 savol (kimga, necha kishi,
+byudjet, kayfiyat) va mos
+mahsulotlar ro'yxati.
+O'yin kabi, sayt esda qoladi.
+Mujiza 777 — Backend TZ
+Page 4 of 15
+Mujiza 777 — Backend TZ
+3. Qatlam ta'mlarini, kremni va bezakni tanlaydi (mevalar, shokolad, fondant).
+4. Yozuv matnini kiritadi va ixtiyoriy namuna rasm yuklaydi.
+5. Sana va vaqtni tanlaydi, minimal oldindan buyurtma muddatiga rioya qilinadi.
+6. Server taxminiy narxni hisoblaydi va jonli ko'rsatadi.
+7. So'rov yuboriladi, admin Telegramda ko'radi va yakuniy narxni tasdiqlaydi.
+8. Mijozga kuzatuv sahifasida narx tasdiqlangani va keyingi qadam ko'rinadi.
+\text{Narx} = (P_{kg} + \sum a_i) \cdot W + \sum b_j
+Bu yerda P_kg tort turining 1 kg narxi, a_i har 1 kg uchun qo'shimchalar (qatlam, krem), W
+vazn (kg), b_j qat'iy qo'shimchalar (yozuv, rasm bosish, maxsus bezak).
+5.Texnologiyalar
+Backend: Java, Spring Boot, Spring Data JPA, PostgreSQL
+Xavfsizlik: Spring Security (admin uchun login, JWT yoki sessiya cookie)
+Hujjat: Swagger/OpenAPI (frontend uchun asosiy manba)
+Frontend (alohida, Antigravity): Next.js, backend bilan RESTAPI orqali ishlaydi
+Deploy: Docker + docker-compose, HTTPS, domen
+Bildirishnoma: Telegram bot (yangi buyurtma kelganda do'konga xabar)
+6. Ma'lumotlar bazasi(entity'lar)
+Hamma entity'da createdAt va updatedAt bo'ladi (BaseEntity orqali).
+Category
+id, nameUz, nameRu, slug, imageUrl, sortOrder, isActive, isDeleted
+Product
+id, category (ManyToOne), nameUz, nameRu, descriptionUz, descriptionRu, slug
+price (so'm, butun son), weight yoki unit (masalan, "1 kg", "6 dona")
+imageUrl (asosiy rasm), qo'shimcha rasmlar (ProductImage ro'yxati)
+isAvailable (hozir mavjud/mavjud emas), isPopular, isNew, sortOrder, isDeleted
+Order
+id, orderNumber (o'qishga qulay, masalan MJ-1042)
+customerName, customerPhone (+998 formatda)
+Page 5 of 15
+Mujiza 777 — Backend TZ
+orderType: PICKUP | DELIVERY
+deliveryAddress, latitude, longitude (faqat DELIVERY uchun, ixtiyoriy)
+branch (olib ketish qaysi filialdan)
+desiredTime (qachonga kerak, ixtiyoriy), comment
+paymentMethod: CASH | CARD (kuryerga yoki do'konda); ONLINE keyingi bosqichda
+status: NEW | CONFIRMED | PREPARING | READY | DELIVERING | COMPLETED |
+CANCELLED
+itemsTotal, deliveryFee, totalAmount
+cancelReason (bekor qilinsa)
+OrderItem
+id, order, product, productNameAtOrder, quantity, priceAtOrder
+Narx buyurtma paytida qotiriladi (Distributor-app'dagi priceAtSale kabi), keyin
+mahsulot narxi o'zgarsa ham eski buyurtma o'zgarmaydi.
+Promotion (aksiyalar va yangiliklar)
+id, titleUz, titleRu, descriptionUz, descriptionRu, imageUrl, startDate, endDate, isActive
+Branch (filiallar)
+id, nameUz, nameRu, addressUz, addressRu, phone, workHours, latitude, longitude,
+isActive
+Setting (sozlamalar, key-value)
+Do'kon telefoni, ish vaqti, yetkazib berish narxi, bepul yetkazib berish chegarasi,
+minimal buyurtma summasi, yetkazib berish yoqilgan/o'chirilgan, Telegram havolalari
+Bularni admin panelda o'zgartirish mumkin bo'lishi kerak, kodni o'zgartirmasdan.
+AdminUser
+id, username, passwordHash (BCrypt), role (ADMIN, keyinroq STAFF)
+Wow imkoniyatlari uchun yangi entity'lar
+CakeType: id, nameUz, nameRu, imageUrl, basePricePerKg, minWeightKg,
+maxWeightKg, weightStep, isActive
+CakeOptionGroup: id, nameUz, nameRu, kind (FLAVOR | CREAM | DECOR | EXTRA),
+isRequired, allowMultiple, sortOrder
+Page 6 of 15
+Mujiza 777 — Backend TZ
+CakeOption: id, group, nameUz, nameRu, imageUrl, priceType (PER_KG | FIXED),
+priceValue, isActive
+CustomCakeRequest: id, order, cakeType, weightKg, inscription, referenceImageUrl,
+desiredDate, calculatedPrice, finalPrice (admin tasdiqlaydi), adminNote. Tanlangan
+variantlar nomi va narxi bilan qotirib saqlanadi (CustomCakeRequestOption: request,
+option, nameAtOrder, priceAtOrder).
+PromoCode: id, code (unique), discountType (PERCENT | FIXED), value,
+minOrderAmount, maxUses, usedCount, firstOrderOnly, validFrom, validTo, isActive
+DeliverySlot: id, startTime, endTime, capacity, weekdays, isActive. Band joylar soni
+sana bo'yicha buyurtmalardan hisoblanadi (Order.deliveryDate + deliverySlot).
+Banner: id, titleUz, titleRu, subtitleUz, subtitleRu, imageDesktopUrl, imageMobileUrl,
+linkUrl, position, activeFrom, activeTo, theme (mavsumiy mavzu kodi), isActive
+CateringRequest: id, name, phone, eventType, eventDate, guestCount, budget,
+comment, status (NEW | CONTACTED | DONE)
+Customer: id, phone (unique), name, telegramChatId (ixtiyoriy), bonusPoints (B
+daraja). Mehmon buyurtmalari telefon raqami bo'yicha shu yozuvga bog'lanadi.
+SpecialDate (B daraja): customer, label, date, remindDaysBefore, isActive
+Review (B daraja): product, customerName, rating (1-5), text, status (PENDING |
+APPROVED | REJECTED)
+AuditLog: id, adminUser, action, entityType, entityId, oldValue, newValue (qisqa),
+createdAt
+Mavjud entity'larga qo'shimcha maydonlar
+Product: oldPrice, discountEndsAt, ingredientsUz, ingredientsRu, calories,
+shelfLifeHours, allergens (NUTS | MILK | GLUTEN | EGG ...), dietTags (SUGAR_FREE ...),
+prepTimeMinutes, isReadyNow
+Order: customer, promoCode, discountAmount, isGift, recipientName, recipientPhone,
+giftMessage, isAnonymousGift, deliveryDate, deliverySlot, pickupCode, trackingToken
+(UUID), estimatedReadyAt
+Order.status ro'yxatiga PRICE_PENDING qo'shiladi (tort so'rovining yakuniy narxi
+tasdiqlanishi kutilmoqda).
+AdminUser.role: ADMIN | STAFF | COURIER
+7. API(endpoint'lar)
+Ochiq (mijoz uchun, login talab qilinmaydi)
+GET /api/public/categories — faol kategoriyalar ro'yxati
+Page 7 of 15
+Mujiza 777 — Backend TZ
+GET /api/public/products?categoryId=&search=&page=&size= — katalog, qidiruv,
+sahifalash
+GET /api/public/products/{slug} — mahsulot sahifasi + o'xshash mahsulotlar
+GET /api/public/products/popular va /new — bosh sahifa bloklari
+GET /api/public/promotions — faol aksiyalar
+GET /api/public/branches — filiallar
+GET /api/public/settings — ochiq sozlamalar (telefon, ish vaqti, yetkazib berish
+narxi)
+POST /api/public/orders — buyurtma berish
+GET /api/public/orders/{orderNumber}?phone= — buyurtma holatini kuzatish
+Til lang=uz|ru parametri yoki Accept-Language sarlavhasi orqali tanlanadi, javobda
+tegishli tildagi maydonlar qaytadi.
+Admin (login talab qilinadi)
+POST /api/admin/auth/login
+Kategoriyalar, mahsulotlar, aksiyalar, filiallar: to'liq CRUD ( /api/admin/... ), o'chirish
+soft delete bilan
+POST /api/admin/upload — rasm yuklash
+PATCH /api/admin/products/{id}/availability — mahsulotni tez "mavjud emas"
+qilish
+GET /api/admin/orders?status=&date=&type= — buyurtmalar ro'yxati
+PATCH /api/admin/orders/{id}/status — holatni o'zgartirish
+GET/PUT /api/admin/settings — sozlamalarni ko'rish va o'zgartirish
+GET /api/admin/dashboard — bugungi buyurtmalar soni, tushum, eng ko'p sotilgan
+mahsulotlar
+Wow imkoniyatlari uchun endpoint'lar
+Ochiq:
+GET /api/public/cake-builder/config — tort turlari, variant guruhlari va narxlari
+POST /api/public/cake-builder/price — tanlov bo'yicha taxminiy narxni hisoblash
+POST /api/public/orders — kengaytirilgan: sovg'a, promo kod, vaqt oynasi, tort
+so'rovi
+GET /api/public/orders/track/{token} — buyurtma holati va tarixi
+GET /api/public/orders/track/{token}/stream — real vaqt yangilanishi (SSE)
+Page 8 of 15
+Mujiza 777 — Backend TZ
+POST /api/public/promo/validate — promo kodni tekshirish va chegirmani
+ko'rsatish
+GET /api/public/delivery/slots?date= — kun bo'yicha bo'sh vaqt oynalari
+GET /api/public/products/{id}/recommendations — Birga olinadi tavsiyalari
+GET /api/public/products?excludeAllergen=NUTS&diet=SUGAR_FREE — allergen va
+parhez filtrlari (mavjud katalog endpoint'ining kengaytmasi)
+GET /api/public/banners — bosh sahifa bannerlari va mavsumiy mavzu
+POST /api/public/catering-requests — keytering so'rovi
+B daraja: POST /api/public/reviews , GET /api/public/products/{id}/reviews ,
+POST /api/public/special-dates
+Admin:
+CRUD: cake-types, cake-options, promo-codes, delivery-slots, banners, cateringrequests
+PATCH /api/admin/orders/{id}/confirm-price — tort so'rovining yakuniy narxini
+tasdiqlash
+GET /api/admin/orders/{id}/receipt — PDF chek
+GET /api/admin/analytics/summary , /hourly , /top-products , /order-types —
+dashboard grafiklari uchun ma'lumot
+GET /api/admin/reports/{daily|monthly|range}/export — Excel eksport
+GET /api/admin/audit-log — o'zgarishlar tarixi
+GET/POST /api/admin/staff — xodimlar va rollar
+B daraja: PATCH /api/admin/reviews/{id} — sharh moderatsiyasi
+8.Biznes qoidalar
+1. Buyurtmada kamida bitta mahsulot bo'lishi kerak, mahsulot soni musbat bo'lishi kerak.
+2. isAvailable = false yoki o'chirilgan mahsulotni buyurtma qilib bo'lmaydi (aniq xato
+xabari bilan).
+3. Narxlar hech qachon mijozdan olinmaydi, server o'zi bazadan hisoblaydi (DTO'da narx
+maydoni bo'lmaydi). Bu mijoz narxni o'zgartirib yuborishidan himoya qiladi.
+4. DELIVERY bo'lsa manzil majburiy. Yetkazib berish narxi sozlamadan olinadi, buyurtma
+summasi bepul yetkazib berish chegarasidan oshsa 0 bo'ladi.
+5. Minimal buyurtma summasidan kam buyurtma qabul qilinmaydi (sozlamada o'zgaradi).
+6. Telefon raqami O'zbekiston formatida tekshiriladi (+998 va 9 raqam).
+Page 9 of 15
+Mujiza 777 — Backend TZ
+7. Status oqimi: NEW → CONFIRMED → PREPARING → READY → (DELIVERING) →
+COMPLETED. Istalgan bosqichda CANCELLED bo'lishi mumkin (sababi bilan). Teskari
+yo'nalishda sakrash taqiqlanadi.
+8. Spamdan himoya: bitta IP/telefondan qisqa vaqtda ko'p buyurtma kelsa cheklanadi
+(rate limit).
+9. Yangi buyurtma kelganda Telegram botga darrov xabar boradi (raqam, mijoz, telefon,
+tarkib, summa, manzil).
+10. Do'kon ish vaqtidan tashqarida buyurtma berilsa, ruxsat beriladi, lekin mijozga "ertaga
+tayyorlanadi" deb ogohlantiriladi (egasi sozlamada xohlasa butunlay yopishi mumkin).
+11. Kategoriya, mahsulot, filial va aksiya o'chirilganda soft delete ishlaydi (tarixiy
+buyurtmalar buzilmasligi uchun).
+Wow imkoniyatlari uchun qo'shimcha qoidalar
+12. Tort konstruktorida narx faqat serverda hisoblanadi, mijoz yuborgan narx e'tiborga
+olinmaydi. Yakuniy narxni admin tasdiqlamaguncha buyurtma PRICE_PENDING
+holatida turadi.
+13. Tort uchun minimal oldindan buyurtma muddati bor (masalan, 24 soat, sozlamada
+o'zgaradi), undan qisqa sanani tanlab bo'lmaydi.
+14. Vaqt oynasi sig'imi to'lgach yangi buyurtma qabul qilinmaydi. Bir vaqtda kelgan
+so'rovlarda ham chegara buzilmasligi uchun tranzaksiya va qulflash ishlatiladi
+(Distributor-app'dagi pessimistic lock tajribasi).
+15. Promo kod: bir buyurtmada bitta kod, chegirma mahsulot narxiga qo'llanadi (yetkazib
+berishga emas), foydalanish soni atomik oshiriladi, muddat va limit tekshiriladi.
+16. Sovg'a buyurtmasida qabul qiluvchining ismi va telefoni majburiy, tabrik matni 300
+belgidan oshmaydi. Anonim sovg'ada buyurtmachining ismi chekda va kuryerga
+ko'rinmaydi.
+17. Flash aksiya muddati tugagach narx avtomatik oddiy narxga qaytadi (oldPrice va
+discountEndsAt asosida, serverda hisoblanadi).
+18. Birga olinadi tavsiyalari oxirgi 90 kunning tugallangan buyurtmalaridan hisoblanadi va
+kechasi bir marta yangilanadi. Ma'lumot kam bo'lsa, mashhur mahsulotlar ko'rsatiladi.
+19. Kuzatuv havolasi taxmin qilib bo'lmaydigan tasodifiy token (UUID) bilan beriladi.
+20. Mijoz faqat NEW holatidagi buyurtmani o'zi bekor qila oladi, keyinchalik faqat admin.
+21. Olib ketish buyurtmasiga 4 xonali kod beriladi, do'konda shu kod orqali topiladi.
+22. B daraja: sharh admin tasdiqlagach ko'rinadi, bitta telefon bitta mahsulotga bitta sharh
+qoldiradi.
+23. B daraja: bayram eslatmasi faqat mijoz Telegram botni ulagan bo'lsa yuboriladi, o'chirib
+qo'yish mumkin, kuniga bir martadan ko'p yuborilmaydi.
+Page 10 of 15
+Mujiza 777 — Backend TZ
+9.Texnik talablar (professional amaliyotlar)
+Arxitektura: Entity / Repository / Service (interface + impl) / Controller / DTO / Mapper
+/ Exception qatlamlari, SOLID.
+Validation (@Valid) va markazlashgan xato boshqaruvi (@ControllerAdvice),
+foydalanuvchiga tushunarli xabarlar, ichki xatolar sirtga chiqmaydi.
+Parollar BCrypt bilan, maxfiy ma'lumotlar (DB paroli, Telegram token, JWT kaliti) faqat
+environment o'zgaruvchilarida.
+CORS faqat o'z frontend domeniga ochiladi.
+Rasm yuklash: faqat jpg/png/webp, hajm cheklovi (masalan, 5 MB), fayl nomi tasodifiy
+(UUID), rasmlar diskda yoki volume'da saqlanadi, serverdan statik beriladi.
+Katta ro'yxatlarda sahifalash (pagination) va tegishli indekslar (slug, category_id,
+status, createdAt).
+Admin endpoint'lar himoyalangan, ochiq endpoint'lar faqat o'qish va buyurtma yaratish
+bilan cheklanadi.
+Swagger hujjati to'liq va aniq bo'lishi kerak, chunki Antigravity frontendni shu asosida
+yozadi.
+Logging (SLF4J), muhim amallar jurnalga yoziladi (buyurtma yaratildi, status o'zgardi).
+Ma'lumotlar bazasi zaxira nusxasi (backup) va tiklash imkoniyati.
+Docker va docker-compose, HTTPS, domen.
+Qo'shimcha texnik talablar
+Migratsiyalar Flyway orqali boshqariladi (ddl-auto=update o'rniga), har o'zgarish
+versiyalangan SQL fayl bo'ladi.
+Katalog va sozlamalar Caffeine keshida saqlanadi, admin o'zgartirganda kesh
+tozalanadi.
+Yuklangan rasm avtomatik WebP formatga va bir nechta o'lchamga (kichik, o'rta, asl)
+o'tkaziladi, shunda sayt tez ochiladi.
+Real vaqt kuzatuvi uchun SSE (Server-Sent Events) ishlatiladi, bu WebSocket'dan
+sodda.
+Telegram Bot API (webhook): admin, kuryer va mijoz xabarlari, inline tugmalar. Token
+faqat environment o'zgaruvchisida.
+Rate limiting buyurtma, promo tekshirish va login endpoint'larida (Bucket4j yoki filtr).
+Rejalashtirilgan vazifalar (@Scheduled): tavsiyalarni kechasi yangilash, tugagan
+aksiyalarni o'chirish, bayram eslatmalari.
+PDF chek generatsiyasi (OpenPDF), 80 mm termoprinter formatida.
+Page 11 of 15
+Mujiza 777 — Backend TZ
+Testlar: muhim servislar (narx hisoblash, promo, vaqt oynalari, status oqimi) uchun
+JUnit + Mockito, integratsion testlar uchun Testcontainers (PostgreSQL).
+CI: GitHub Actions orqali har push'da build va test.
+Xavfsizlik: JWT httpOnly cookie'da, login urinishlari cheklanadi, security headerlar,
+HTTPS, CORS faqat o'z domeniga.
+Kuzatuv: Spring Boot Actuator health, loglar faylga yoziladi.
+Hujjatlar: README (portfolio uchun), Swagger, arxitektura sxemasi.
+10. Dizayn va foydalanuvchitajribasi(UX)talablari
+Bu bo'lim keyinroq Antigravity uchun yoziladigan frontend promptining asosi bo'ladi.
+Brend va uslub
+Asosiy yo'nalish: issiq, qaymoqli, premium qandolat hissi. Logotip bo'lsa, ranglar undan
+olinadi.
+Taklif palitrasi (logotip bo'lmasa): qaymoq fon (#FFF8EE), chuqur shokolad matn
+(#3B2418), oltin aksent (#C9A24B), to'q qizil tugmalar (#9B2D30).
+Mahsulot rasmlari katta va sifatli, kartochkalar yumshoq burchakli, shriftlar o'qishga
+qulay (sarlavha uchun bezakli serif, matn uchun sans-serif).
+Animatsiyalar nozik: mahsulot kartochkasi hover'i, savatga qo'shilganda tugmadan
+savatga uchib tushish, skeleton yuklash. prefers-reduced-motion hurmat qilinadi.
+Sahifalar
+Bosh sahifa: mavsumiy hero banner, Kun taklifi (taymer), rasmli kategoriyalar, mashhur
+va yangi mahsulotlar, tort konstruktoriga katta chaqiriq, aksiyalar, filiallar xaritasi,
+sharhlar (B), footer (telefon, ish vaqti, ijtimoiy tarmoqlar).
+Katalog va kategoriya: filtrlar (narx, allergen, parhez), saralash, qidiruv, sevimlilar
+belgisi.
+Mahsulot: katta rasm galereyasi, tarkib va allergenlar, tayyorlanish vaqti, Birga olinadi,
+ulashish tugmasi.
+Tort konstruktori: qadamma-qadam (stepper) jarayon, jonli narx va tanlov xulosasi.
+Savat va buyurtma rasmiylashtirish (3 qadam: aloqa, olib ketish yoki yetkazish va vaqt,
+tasdiq va to'lov usuli). Mehmon sifatida, telefon raqami niqobi (+998), ma'lumotlarni
+keyingi safar uchun brauzerda eslab qolish.
+Buyurtma kuzatuvi, Sevimlilar, Aksiyalar va yangiliklar, Filiallar, Keytering, Yetkazib
+berish va to'lov, Biz haqimizda, Maxfiylik siyosati va Ommaviy oferta, 404 sahifa.
+Page 12 of 15
+Mujiza 777 — Backend TZ
+Texnik ko'rsatkichlar
+Mobil-first: dizayn 360 px kenglikdan boshlanadi.
+Next.js SSR/SSG: har sahifa serverda tayyor HTML bo'lib keladi.
+Lighthouse (mobil): Performance, SEO, Accessibility va Best Practices har biri 90 dan
+yuqori.
+Rasmlar WebP, lazy loading, aniq o'lcham (layout shift bo'lmasligi uchun).
+SEO: har sahifada alohida title va description, Open Graph, JSON-LD (Product,
+LocalBusiness, BreadcrumbList), sitemap.xml, robots.txt, uz va ru versiyalar uchun
+hreflang. Google Search Console va Google Business Profile ulanadi.
+Tillar: /uz va /ru yo'llari, til tanlagich har sahifada.
+Qulaylik (a11y): yetarli kontrast, klaviatura bilan boshqarish, rasmlarga alt matn.
+PWA: manifest, o'rnatish taklifi, oflayn holatda chiroyli xabar sahifasi.
+11. Admin paneltalablari
+Rollar
+ADMIN: hamma narsa, shu jumladan sozlamalar, xodimlar va hisobotlar.
+STAFF: buyurtmalar, mahsulot mavjudligi, tort so'rovlari.
+COURIER (B daraja): faqat o'ziga biriktirilgan buyurtmalar.
+Bo'limlar
+Dashboard: bugungi buyurtmalar soni va tushum (kecha bilan taqqoslash), status
+bo'yicha taqsimot, soat bo'yicha buyurtmalar grafigi, top 10 mahsulot, olib ketish va
+yetkazish ulushi, o'rtacha chek, promo kod samarasi.
+Buyurtmalar: jonli ro'yxat, filtrlar (status, tur, sana), status tugmalari, yangi
+buyurtmada ovozli signal, chekni chop etish.
+Tort so'rovlari: tanlovlar, namuna rasm, narxni tasdiqlash yoki o'zgartirish, mijozga izoh.
+Mahsulotlar: tezkor tahrir, bir tugma bilan mavjud/mavjud emas, ommaviy narx
+o'zgartirish, rasmlarni sudrab yuklash.
+Kategoriyalar, aksiyalar, bannerlar, promo kodlar, tort variantlari.
+Yetkazish: vaqt oynalari, sig'im, yetkazish narxi va bepul yetkazish chegarasi.
+Filiallar va sozlamalar.
+Keytering so'rovlari, sharhlar moderatsiyasi (B).
+Hisobotlar: kunlik, oylik va oraliq, Excel eksport (Distributor-app'dagi kabi).
+Xavfsizlik: audit log (kim, qachon, nimani o'zgartirdi), zaxira nusxa va tiklash.
+Page 13 of 15
+Mujiza 777 — Backend TZ
+Telegram orqali boshqaruv
+Yangi buyurtma xabari inline tugmalar bilan: Qabul qilish, Tayyor, Bekor qilish. Egasi
+kompyuterga kirmasdan ham ishlay oladi.
+/bugun buyrug'i bugungi buyurtmalar soni va tushumni qisqa qaytaradi.
+12.Bosqichlar
+1-9-bosqichlar birinchi ishlaydigan versiyani (Reliz 1) beradi, 10-13 wow qismini (Reliz 2), 14-
+16 chiqarishga tayyorlaydi.
+1. Asos: loyiha skeleti, PostgreSQL, Flyway, BaseEntity, xato boshqaruvi, Swagger.
+2. Katalog: Category va Product (tarkib, allergen, eski narx maydonlari bilan), rasm
+yuklash (WebP, bir nechta o'lcham).
+3. Admin kirishi: AdminUser, Spring Security, rollar (ADMIN, STAFF).
+4. Buyurtma yadrosi: Order va OrderItem, narx qotirish, status oqimi, olib ketish va
+yetkazib berish.
+5. Filiallar, aksiyalar, bannerlar, sozlamalar va uz/ru tillari.
+6. Telegram bot: yangi buyurtma xabari inline tugmalar bilan, admin buyruqlari.
+7. Promo kodlar va Kun taklifi (flash aksiya).
+8. Yetkazib berish vaqt oynalari va olib ketish kodi.
+9. Jonli kuzatuv (SSE) va mijozga Telegram xabarlari.
+10. Tort konstruktori: variantlar, narx hisoblash, so'rov, narxni tasdiqlash.
+11. Sovg'a rejimi va keytering so'rovi.
+12. Aqlli tavsiyalar (Birga olinadi), sevimlilar, qidiruv va filtrlar.
+13. Admin dashboard, hisobotlar, PDF chek, Excel eksport, audit log, zaxira nusxa.
+14. Sifat: testlar, rate limit, keshlash, Swagger'ni to'ldirish, CI.
+15. Frontend prompti/TZ yozish (backend API tayyor bo'lgach) va Antigravity'ga
+topshirish.
+16. Deploy: Docker, domen, HTTPS, Google Search Console, jonli ishga tushirish.
+13. Keyingi versiyalarga qoldiriladi
+B darajali imkoniyatlar 4-bo'limda yozilgan. Undan tashqari:
+Onlayn to'lov (Click, Payme) va uni buyurtma statusiga ulash
+Mijoz hisobi: telefon va SMS kod bilan kirish, buyurtmalar tarixi, manzillar daftari,
+sevimlilarni bazada saqlash
+Obuna (masalan, har hafta yangi pishiriq yetkazish)
+Page 14 of 15
+Mujiza 777 — Backend TZ
+Mobil ilova (PWA'dan keyin)
+Sun'iy intellektli maslahatchi (mahsulot tanlashda chat)
+14. Ochiq savollar (do'kon egasi bilan aniqlanadi)
+Yetkazib berish narxi va qaysi hududlarga yetkaziladi?
+Minimal buyurtma summasi bormi?
+Do'konning haqiqiy ish vaqti va nechta filial?
+Tortlarga oldindan buyurtma (necha soat yoki kun avval) kerakmi?
+To'lov qaysi usullarda qabul qilinadi (naqd, karta, keyinroq Click/Payme)?
+Logotip, firma ranglari va mahsulotlarning sifatli rasmlari bormi? 777 nomining g'oyasi
+bormi?
+Tort konstruktori uchun: qaysi tort turlari, vaznlar, qatlam ta'mlari, kremlar, bezaklar bor
+va ularning narxi qancha?
+Kuniga nechta tort va buyurtma tayyorlash imkoniyati bor (vaqt oynalari sig'imi
+uchun)?
+Mahsulotlar soni taxminan nechta?
+Admin panelni kim yuritadi va nechta xodim kiradi?
+Buyurtmalar kelganda Telegram xabarini qaysi akkaunt yoki guruh oladi?
+Domen nomi qaysi (masalan, mujiza777.uz) va ijtimoiy tarmoq sahifalari manzillari
+qanday?
+Promo kod va chegirma berishga tayyormi?
+Page 15 of 15

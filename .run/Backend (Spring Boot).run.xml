@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Backend (Spring Boot)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="mujiza" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="uz.akmal.mujiza.MujizaApplication" />
+    <envs>
+      <env name="TELEGRAM_BOT_TOKEN" value="8973481093:AAGqYVNDy_WXIdEAWLOWe_9n8ctG9QtVtAQ" />
+      <env name="TELEGRAM_CHAT_ID" value="7187089111" />
+      <env name="TELEGRAM_ALLOWED_USER_IDS" value="7187089111" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

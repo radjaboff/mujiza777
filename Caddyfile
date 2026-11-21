@@ -1,0 +1,33 @@
+{$PUBLIC_DOMAIN}, www.{$PUBLIC_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(self)"
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://telegram.org https://api-maps.yandex.ru; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://images.unsplash.com https://*.telegram.org https://*.yandex.ru https://*.yandex.net https://*.yandex.uz https://mc.yandex.ru; connect-src 'self' https://api.telegram.org https://images.unsplash.com https://*.yandex.ru https://*.yandex.uz; frame-src 'self' https://yandex.uz https://*.yandex.uz https://yandex.ru https://*.yandex.ru; frame-ancestors 'self' https://web.telegram.org https://*.telegram.org;"
+		-Server
+	}
+
+	request_body {
+		max_size 15MB
+	}
+
+	# To'g'ridan-to'g'ri backend API ga yo'naltirish (Node.js yuklamasini kamaytiradi va tezlikni oshiradi)
+	handle /api/* {
+		reverse_proxy backend:8081
+	}
+
+	# Mahalliy diskdagi rasmlar uchun backend ga yo'naltirish
+	handle /uploads/* {
+		reverse_proxy backend:8081
+	}
+
+	# Qolgan barcha sahifalar Next.js frontend ga uzatiladi
+	handle {
+		reverse_proxy frontend:3000
+	}
+}
+

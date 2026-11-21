@@ -1,0 +1,667 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-jakarta: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-playfair: 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+  /* Asosiy brend ranglari (TZ 9-bo'lim) */
+  --brand-green: #244B2B;
+  --brand-green-hover: #1A3720;
+  --brand-gold: #D4AF37;
+  --brand-gold-warm: #C59B27;
+  --brand-cream: #FBF9F4;
+  --brand-cream-soft: #F4EFE6;
+  --brand-dark: #1C261E;
+  --brand-muted: #596B5E;
+  --brand-border: #E9E5DD;
+  --brand-berry: #B83A3A;
+
+}
+
+/* Mavsumiy mavzular (TZ 17.6 bo'yicha) */
+[data-theme="NAVRUZ"], [data-theme="navruz"] {
+  --brand-green: #2E7D32;
+  --brand-green-hover: #1B5E20;
+  --brand-gold: #F59E0B;
+  --brand-cream: #F8FAF5;
+}
+[data-theme="NAVRUZ"] .bg-\[\#244B2B\], [data-theme="navruz"] .bg-\[\#244B2B\] { background-color: #2E7D32 !important; }
+[data-theme="NAVRUZ"] .text-\[\#244B2B\], [data-theme="navruz"] .text-\[\#244B2B\] { color: #2E7D32 !important; }
+[data-theme="NAVRUZ"] .border-\[\#244B2B\], [data-theme="navruz"] .border-\[\#244B2B\] { border-color: #2E7D32 !important; }
+[data-theme="NAVRUZ"] .hover\:bg-\[\#1A3720\]:hover, [data-theme="navruz"] .hover\:bg-\[\#1A3720\]:hover { background-color: #1B5E20 !important; }
+[data-theme="NAVRUZ"] .hover\:text-\[\#244B2B\]:hover, [data-theme="navruz"] .hover\:text-\[\#244B2B\]:hover { color: #2E7D32 !important; }
+
+[data-theme="HAYIT"], [data-theme="hayit"] {
+  --brand-green: #115E59;
+  --brand-green-hover: #0F4E4A;
+  --brand-gold: #D4AF37;
+  --brand-cream: #F4FAF8;
+}
+[data-theme="HAYIT"] .bg-\[\#244B2B\], [data-theme="hayit"] .bg-\[\#244B2B\] { background-color: #115E59 !important; }
+[data-theme="HAYIT"] .text-\[\#244B2B\], [data-theme="hayit"] .text-\[\#244B2B\] { color: #115E59 !important; }
+[data-theme="HAYIT"] .border-\[\#244B2B\], [data-theme="hayit"] .border-\[\#244B2B\] { border-color: #115E59 !important; }
+[data-theme="HAYIT"] .hover\:bg-\[\#1A3720\]:hover, [data-theme="hayit"] .hover\:bg-\[\#1A3720\]:hover { background-color: #0F4E4A !important; }
+[data-theme="HAYIT"] .hover\:text-\[\#244B2B\]:hover, [data-theme="hayit"] .hover\:text-\[\#244B2B\]:hover { color: #115E59 !important; }
+
+[data-theme="MARCH_8"], [data-theme="march_8"] {
+  --brand-green: #8E24AA;
+  --brand-green-hover: #6A1B9A;
+  --brand-gold: #E91E63;
+  --brand-berry: #D81B60;
+  --brand-cream: #FDF7FA;
+}
+[data-theme="MARCH_8"] .bg-\[\#244B2B\], [data-theme="march_8"] .bg-\[\#244B2B\] { background-color: #8E24AA !important; }
+[data-theme="MARCH_8"] .text-\[\#244B2B\], [data-theme="march_8"] .text-\[\#244B2B\] { color: #8E24AA !important; }
+[data-theme="MARCH_8"] .border-\[\#244B2B\], [data-theme="march_8"] .border-\[\#244B2B\] { border-color: #8E24AA !important; }
+[data-theme="MARCH_8"] .hover\:bg-\[\#1A3720\]:hover, [data-theme="march_8"] .hover\:bg-\[\#1A3720\]:hover { background-color: #7B1FA2 !important; }
+[data-theme="MARCH_8"] .hover\:text-\[\#244B2B\]:hover, [data-theme="march_8"] .hover\:text-\[\#244B2B\]:hover { color: #8E24AA !important; }
+
+[data-theme="NEW_YEAR"], [data-theme="new_year"] {
+  --brand-green: #0D2B45;
+  --brand-green-hover: #081B2B;
+  --brand-gold: #D4AF37;
+  --brand-berry: #C42B2B;
+  --brand-cream: #F5F7FA;
+}
+[data-theme="NEW_YEAR"] .bg-\[\#244B2B\], [data-theme="new_year"] .bg-\[\#244B2B\] { background-color: #0D2B45 !important; }
+[data-theme="NEW_YEAR"] .text-\[\#244B2B\], [data-theme="new_year"] .text-\[\#244B2B\] { color: #0D2B45 !important; }
+[data-theme="NEW_YEAR"] .border-\[\#244B2B\], [data-theme="new_year"] .border-\[\#244B2B\] { border-color: #0D2B45 !important; }
+[data-theme="NEW_YEAR"] .hover\:bg-\[\#1A3720\]:hover, [data-theme="new_year"] .hover\:bg-\[\#1A3720\]:hover { background-color: #081B2B !important; }
+[data-theme="NEW_YEAR"] .hover\:text-\[\#244B2B\]:hover, [data-theme="new_year"] .hover\:text-\[\#244B2B\]:hover { color: #0D2B45 !important; }
+
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-x: none;
+}
+
+body {
+  background-color: var(--brand-cream);
+  color: var(--brand-dark);
+  font-family: var(--font-jakarta), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-x: none;
+}
+
+/* Mobil ekranlarda gorizontal silkinish va qimirlash (horizontal wobble/overflow)ni butunlay to'xtatish */
+main, section, article, header, footer {
+  max-width: 100%;
+}
+
+/* Sarlavhalar uchun Playfair Display serif shrifti */
+h1, h2, h3, .font-serif {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* Nozik va silliq scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #F4EFE6;
+}
+::-webkit-scrollbar-thumb {
+  background: #C4BCB0;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9A9082;
+}
+
+/* Scrollbarni butunlay yashirish (gorizontal karusel, stories va chipslarda) */
+.scrollbar-none::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.scrollbar-none,
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Matn tanlaganda brend tilla/zumrad fon */
+::selection {
+  background-color: #D4AF37;
+  color: #1C261E;
+}
+
+/* Silliq animatsiyalar */
+.transition-smooth {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Apple uslubidagi nafis mikro-animatsiyalar */
+.ease-apple {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cartPulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  75% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.animate-cart-pulse {
+  animation: cartPulse 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.animate-heart-pop {
+  animation: heartPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ========================================================
+   MO'JIZA 777 — LUXURY MIDNIGHT EMERALD & GOLD (Tungi rejim)
+   Qop-qora emas, nozik ko'zga yoqimli shohona quyuq zumrad
+   ======================================================== */
+
+.dark {
+  --brand-green: #2E7D32;
+  --brand-green-hover: #388E3C;
+  --brand-gold: #E5C358;
+  --brand-gold-warm: #D4AF37;
+  --brand-cream: #0F1712;
+  --brand-cream-soft: #141F17;
+  --brand-dark: #F5F2EA;
+  --brand-muted: #9EB0A1;
+  --brand-border: #293B2D;
+  --brand-berry: #EF4444;
+}
+
+.dark body {
+  background-color: #0F1712 !important;
+  color: #F5F2EA !important;
+}
+
+/* Fon va kartochkalar */
+.dark .bg-white {
+  background-color: #1A281E !important;
+}
+
+.dark .bg-\[\#FBF9F4\],
+.dark .bg-\[\#FBF9F4\]\/95 {
+  background-color: #141F17 !important;
+}
+
+.dark .bg-\[\#F4EFE6\] {
+  background-color: #121B14 !important;
+}
+
+.dark .bg-white\/95,
+.dark .bg-white\/90,
+.dark .bg-white\/80 {
+  background-color: rgba(20, 31, 23, 0.95) !important;
+}
+
+/* Matn ranglari */
+.dark .text-\[\#1C261E\] {
+  color: #F5F2EA !important;
+}
+
+.dark .text-\[\#596B5E\] {
+  color: #9EB0A1 !important;
+}
+
+.dark .text-gray-900,
+.dark .text-gray-800 {
+  color: #F5F2EA !important;
+}
+
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-gray-500 {
+  color: #9EB0A1 !important;
+}
+
+/* Chegaralar (Borders) */
+.dark .border-\[\#E9E5DD\],
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: #293B2D !important;
+}
+
+/* Hover holatlari */
+.dark .hover\:bg-\[\#F4EFE6\]:hover,
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-gray-100:hover {
+  background-color: #243629 !important;
+}
+
+.dark .hover\:text-\[\#244B2B\]:hover {
+  color: #E5C358 !important;
+}
+
+/* Logo SVG matnlari */
+.dark svg text[fill="#244B2B"],
+.dark svg text[fill="#1C261E"] {
+  fill: #F5F2EA !important;
+}
+
+/* Input, Textarea va Select lar */
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark textarea,
+.dark select {
+  background-color: #131E16 !important;
+  color: #F5F2EA !important;
+  border-color: #2D3F30 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #6C8070 !important;
+}
+
+/* Modallar va Kartochkalar soyasi */
+.dark .shadow-sm,
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow-xl,
+.dark .shadow-2xl {
+  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.55) !important;
+}
+
+/* Scrollbar qorong'i rejimda */
+.dark ::-webkit-scrollbar-track {
+  background: #0F1712;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #293B2D;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3B5241;
+}
+
+/* Qo'shimcha nozik bezaklar va fonlar */
+.dark .bg-\[\#FAF8F5\] {
+  background-color: #141F17 !important;
+}
+
+.dark .border-\[\#EAE6DD\],
+.dark .border-\[\#E4DFD5\] {
+  border-color: #293B2D !important;
+}
+
+.dark .hover\:bg-\[\#F3EFE6\]:hover {
+  background-color: #243629 !important;
+}
+
+.dark .bg-amber-50\/80,
+.dark .bg-amber-50 {
+  background-color: rgba(229, 195, 88, 0.12) !important;
+  color: #E5C358 !important;
+}
+
+.dark .border-amber-200\/60,
+.dark .border-amber-200 {
+  border-color: rgba(229, 195, 88, 0.25) !important;
+}
+
+.dark .text-\[\#AA820A\] {
+  color: #E5C358 !important;
+}
+
+.dark .bg-\[\#244B2B\]\/5,
+.dark .bg-\[\#244B2B\]\/10 {
+  background-color: rgba(46, 125, 50, 0.18) !important;
+}
+
+/* Kategoriya kapsulalari va varaqlar tugmalari */
+.dark .bg-\[\#F6F5F2\],
+.dark .bg-\[\#F7F5F0\],
+.dark .bg-\[\#F5F2EB\],
+.dark .bg-\[\#FDF6E2\] {
+  background-color: #18251C !important;
+}
+
+.dark .border-\[\#EAE7DF\],
+.dark .border-\[\#E4E0D7\],
+.dark .border-\[\#E9E5DD\]\/60,
+.dark .border-\[\#E9E5DD\]\/80 {
+  border-color: #2B3D2F !important;
+}
+
+.dark .bg-\[\#F4EFE6\]\/60 {
+  background-color: #141F17 !important;
+}
+
+.dark .border-\[\#E9E5DD\]\/70 {
+  border-color: #293B2D !important;
+}
+
+.dark .from-\[\#FBF9F4\] {
+  --tw-gradient-from: #152218 var(--tw-gradient-from-position) !important;
+}
+
+.dark .via-white {
+  --tw-gradient-stops: var(--tw-gradient-from), #19271D var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+}
+
+.dark .to-\[\#FBF9F4\] {
+  --tw-gradient-to: #152218 var(--tw-gradient-to-position) !important;
+}
+
+/* Silliq mavzu almashinuvi */
+html, body {
+  transition: background-color 0.25s ease, color 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobil Safe Area va Ergonomika (iPhone va Android to'liq ekran moslashuvi) */
+.safe-area-bottom {
+  padding-bottom: calc(0.4rem + env(safe-area-inset-bottom, 0px));
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* ========================================================
+   MO'JIZA 777 — PREMIUM BOUTIQUE BAKERY GPU ANIMATIONS
+   100% transform / opacity / will-change asosida
+   ======================================================== */
+
+@keyframes ambientFloat1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(24px, 32px, 0) scale(1.08);
+  }
+}
+
+@keyframes ambientFloat2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-30px, -20px, 0) scale(1.06);
+  }
+}
+
+@keyframes ambientFloat3 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(20px, -30px, 0) scale(1.05);
+  }
+}
+
+.animate-ambient-float-1 {
+  animation: ambientFloat1 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-ambient-float-2 {
+  animation: ambientFloat2 22s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-ambient-float-3 {
+  animation: ambientFloat3 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes luxuryFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0) rotate(1.5deg);
+  }
+}
+
+@keyframes luxuryFloatReverse {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(6px, 10px, 0) rotate(-1.5deg);
+  }
+}
+
+.animate-luxury-float {
+  animation: luxuryFloat 8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-luxury-float-reverse {
+  animation: luxuryFloatReverse 9s ease-in-out infinite 0.8s;
+  will-change: transform;
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0) rotate(3.5deg);
+  }
+}
+
+@keyframes floatDelayed {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-10px, -22px, 0) rotate(-4deg);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(12px, 18px, 0) rotate(-3.5deg);
+  }
+}
+
+@keyframes floatDance {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  33% {
+    transform: translate3d(8px, -18px, 0) rotate(4deg) scale(1.05);
+  }
+  66% {
+    transform: translate3d(-8px, -10px, 0) rotate(-4deg) scale(0.96);
+  }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 3.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-float-delayed {
+  animation: floatDelayed 4.2s ease-in-out infinite 0.6s;
+  will-change: transform;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 3.6s ease-in-out infinite 0.3s;
+  will-change: transform;
+}
+
+.animate-float-dance {
+  animation: floatDance 4.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes sparklePulse {
+  0%, 100% {
+    transform: scale(0.85) rotate(0deg);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.25) rotate(12deg);
+    opacity: 0.95;
+  }
+}
+
+.animate-sparkle-pulse {
+  animation: sparklePulse 2.2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Kartochkalar ustidan o'tuvchi nafis nurlar shulasi (Spotlight Shimmer Sweep) */
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+.animate-shimmer-sweep {
+  animation: shimmerSweep 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Oltin nozik hoshiya tebranishi */
+@keyframes goldPulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px 2px rgba(212, 175, 55, 0.28);
+  }
+}
+
+.animate-gold-glow {
+  animation: goldPulseGlow 3s ease-in-out infinite;
+}
+
+/* Shohona Tillarang Metall Jilosi (Gold Foil Text Shimmer) */
+@keyframes goldTextShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.gold-shimmer-text {
+  background: linear-gradient(
+    105deg,
+    #B38728 0%,
+    #FDF0CD 25%,
+    #D4AF37 50%,
+    #AA820A 75%,
+    #FDF0CD 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldTextShimmer 5s linear infinite;
+  display: inline-block;
+}
+
+/* Oltin Changi (Stardust) sekin ko'tarilishi */
+@keyframes stardustFloat {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate3d(8px, -20px, 0);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(0, -40px, 0);
+    opacity: 0.2;
+  }
+}
+
+.animate-stardust {
+  animation: stardustFloat 7s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes heroDrift {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+.hero-drift {
+  animation: heroDrift 22s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.hero-paused .hero-drift {
+  animation-play-state: paused;
+}
+
+.hero-fade {
+  transition: opacity 0.8s ease-in-out;
+}
+
+@keyframes goldRing {
+  0% { transform: scale(0.98); opacity: 0.55; }
+  100% { transform: scale(1.03); opacity: 0; }
+}
+
+.animate-gold-ring {
+  animation: goldRing 1.5s ease-out 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ambient-float-1,
+  .animate-ambient-float-2,
+  .animate-ambient-float-3,
+  .animate-luxury-float,
+  .animate-luxury-float-reverse,
+  .animate-float-gentle,
+  .animate-float-delayed,
+  .animate-float-reverse,
+  .animate-float-dance,
+  .animate-sparkle-pulse,
+  .animate-stardust,
+  .gold-shimmer-text,
+  .animate-gold-ring,
+  .hero-drift,
+  .hero-fade {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+
+
+

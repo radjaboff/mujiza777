@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Backend (Application)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="uz.akmal.mujiza.MujizaApplication" />
+    <module name="mujiza" />
+    <envs>
+      <env name="TELEGRAM_BOT_TOKEN" value="8973481093:AAGqYVNDy_WXIdEAWLOWe_9n8ctG9QtVtAQ" />
+      <env name="TELEGRAM_CHAT_ID" value="7187089111" />
+      <env name="TELEGRAM_ALLOWED_USER_IDS" value="7187089111" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

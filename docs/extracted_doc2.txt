@@ -1,0 +1,578 @@
+﻿Mujiza 777 — Frontend TZ (Antigravity uchun)
+Muallif: Akmal · Sana: 2026-10-28 · Holat: 1-versiya (backend qurilishda, hujjat yangilanib turadi)
+0. Avval shuni o'qi
+Bu hujjat Mujiza 777 (Qarshi shahridagi mashhur shirinlik do'koni) onlayn platformasining frontend qismi uchun to'liq texnik topshiriq. Backend (Spring Boot) alohida qurilmoqda va qisman tayyor.
+API manbasi (haqiqat): Swagger http://localhost:8081/swagger-ui.html, OpenAPI JSON http://localhost:8081/v3/api-docs. TypeScript tiplarini shundan generatsiya qil (openapi-typescript), qo'lda tip yozma. Bu hujjatdagi shakllar qisqa ma'lumotnoma; ular Swagger'dan farq qilsa, Swagger to'g'ri.
+Hujjatdagi belgilar: [TAYYOR] — API ishlaydi, hoziroq ulash mumkin. [REJADA] — API hali yo'q; UI'ni funksiya bayrog'i (feature flag) ortida tayyorla, API chiqmaguncha uni chaqirma. Qaysi biri tayyor bo'lganini Akmal xabar qiladi.
+Taxmin qilma: noaniq joyda Swagger'ga qara, u ham aniq bermasa, savol ber.
+Hamma matn o'zbek (lotin) va rus tillarida bo'lishi shart. Kodda qattiq yozilgan (hardcoded) matn bo'lmasin.
+1. Loyiha maqsadi
+Mujiza 777 uchun onlayn do'kon: mijoz mahsulotlarni ko'radi, savatga qo'shadi, olib ketish yoki yetkazib berish bilan buyurtma beradi va buyurtmani real vaqtda kuzatadi. Alohida admin panel orqali do'kon egasi va xodimlar mahsulot, kategoriya, aksiya, filial, sozlamalar va buyurtmalarni boshqaradi.
+Namunalar: axmad.uz (saytdan savat va buyurtma, sevimlilar, filiallar) va safiabakery.uz (qandolatga mos issiq dizayn, aksiyalar). Ularning kuchli tomonlarini olamiz, lekin dizayn o'ziga xos bo'lsin, hech narsani nusxalama. Maqsad: do'kon egasini hayratda qoldiradigan, tez va telefonda qulay sayt.
+Auditoriya: Qarshi va atrofdagi mijozlar, asosan telefondan (Telegram va Instagram havolalari orqali kirishadi), o'zbek va rus tillarida, ba'zan sekin internet bilan.
+2. Texnologiyalar (majburiy)
+Maqsad
+Tanlov
+Framework
+Next.js (App Router, oxirgi barqaror versiya), React, TypeScript (strict)
+Stil
+Tailwind CSS, Radix/shadcn/ui komponentlari
+Til (i18n)
+next-intl, yo'llar /uz/... va /ru/...
+Server holati
+TanStack Query (admin va mijozning interaktiv qismlari)
+Mijoz holati
+Zustand (savat, sevimlilar, mening buyurtmalarim, localStoragega saqlanadi)
+Formalar
+react-hook-form + zod
+API
+openapi-typescript + openapi-fetch
+Boshqa
+lucide-react (ikonkalar), Embla (banner slayderi), date-fns
+Sifat
+ESLint, Prettier, Playwright (asosiy buyurtma oqimi uchun smoke test)
+Yetkazish
+output: 'standalone' + Dockerfile
+Qoidalar: sahifalar sukut bo'yicha Server Component; use client faqat interaktivlik kerak joyda. any taqiqlangan. Mahsulot va kategoriya sahifalari serverda renderlanadi (SEO va Telegram havola ko'rinishi uchun).
+3. Muhit va API bilan ishlash qoidalari
+3.1. Muhit o'zgaruvchilari
+Nomi
+Vazifasi
+Misol
+API_INTERNAL_URL
+Server tomonidan backend'ga so'rov
+http://localhost:8081
+NEXT_PUBLIC_SITE_URL
+Saytning haqiqiy manzili (canonical, Open Graph, sitemap)
+https://mujiza777.uz (vaqtincha)
+NEXT_PUBLIC_SSE_BASE_URL
+Faqat dev rejimida real vaqt ulanishi uchun (ixtiyoriy)
+http://localhost:8081
+.env.example fayli bo'lsin, haqiqiy .env GitHub'ga tushmasin.
+3.2. Proksi: brauzer faqat o'z domeniga so'rov yuboradi
+next.config ichida rewrites(): /api/:path* va /uploads/:path* so'rovlari API_INTERNAL_URL ga yo'naltirilsin. Natijada kodda nisbiy yo'llar (/api/public/products) ishlatiladi, CORS va cookie muammolari bo'lmaydi. Productionda xuddi shuni reverse proxy (nginx/Caddy) qiladi, kod o'zgarmaydi. Server komponentlarda fetch API_INTERNAL_URL ga to'g'ridan-to'g'ri boradi.
+Real vaqt (SSE) ulanishi dev rejimida proksi orqali bufferlanib qolishi mumkin: shuning uchun dev'da NEXT_PUBLIC_SSE_BASE_URL ishlatilsin, productionda nisbiy yo'l. SSE ishlamasa, avtomatik 15 soniyalik pollingga o'tilsin (7.4-bo'lim).
+3.3. Autentifikatsiya (faqat admin panel)
+Kirish: POST /api/admin/auth/login. Muvaffaqiyatli bo'lsa server MUJIZA_TOKEN degan httpOnly cookie beradi (12 soat amal qiladi). JavaScript uni o'qiy olmaydi va o'qimasligi kerak.
+Admin so'rovlarida har doim credentials: 'include'.
+401 → /admin/login ga yo'naltir. 403 → "Ruxsat yo'q" xabari (masalan, xodim sozlamalarga kirsa).
+Sahifa ochilganda GET /api/admin/auth/me bilan kirgan-kirmaganligini tekshir.
+Rollar: ADMIN (hamma narsa), STAFF (sozlamalardan tashqari hamma narsa). COURIER roli keyinroq.
+3.4. Til
+Hamma ochiq (/api/public/...) endpoint lang=uz|ru parametrini oladi (standart uz). Parametrni URL'dagi tilga qarab doim yubor. Ruscha matn to'ldirilmagan bo'lsa, backend o'zbekchasini qaytaradi (qo'shimcha ish kerak emas). Adminga ikkala tildagi maydonlar alohida ko'rinadi.
+3.5. Xato javobi va ularni ko'rsatish
+Hamma xato bir xil shaklda keladi:
+interface ApiError {  timestamp: string;  status: number;  error: string;  message: string;                       // tushunarli xabar (faqat o'zbekcha!)  path: string;  fieldErrors: Record<string, string> | null;  // validation xatosida: maydon -> xabar}
+Status
+Ma'nosi
+UI'da nima qilinadi
+400
+Noto'g'ri ma'lumot
+fieldErrors bo'lsa, xatoni mos input yoniga qo'y; aks holda message ni toast qilib ko'rsat
+401
+Kirmagan
+Adminda login sahifasiga yo'naltir
+403
+Ruxsat yo'q
+"Ruxsat yo'q" xabari
+404
+Topilmadi
+Mijoz sahifasida notFound(); kuzatuvda "Buyurtma topilmadi"
+409
+To'qnashuv (masalan, holat o'tishi mumkin emas, slug band)
+message ni toast qil
+413
+Fayl katta
+"Fayl 5 MB dan oshmasligi kerak"
+429
+Juda ko'p urinish
+"Birozdan keyin urinib ko'ring"
+500
+Server xatosi
+Umumiy xabar, texnik tafsilot ko'rsatma
+Muhim: backend xabarlari faqat o'zbekcha. Rus tilidagi foydalanuvchiga umumiy holatlar (status kodi bo'yicha) ruscha matn ko'rsat, backend matni faqat zaxira sifatida chiqsin.
+3.6. Ma'lumot formatlari
+Pul: butun so'm (Long). Ko'rinishi 360 000 so'm (ming ajratgich: oddiy probel), ruscha 360 000 сум. Kasr yo'q.
+Miqdor: 1.5, 1.500 yoki 2 ko'rinishida kelishi mumkin. Oxiridagi nollarni olib tashla: 1.5 kg, 2 dona.
+Vaqt: 2026-10-27T13:07:45 (zonasiz). Bu Toshkent vaqti (UTC+5), shunday talqin qil va brauzer zonasiga o'tkazma.
+Rasm: imageUrl nisbiy yo'l (/uploads/products/3f2a.webp) yoki null. null bo'lsa brendga mos placeholder ko'rsat. Rasmlar next/image bilan, aniq o'lcham va lazy yuklash bilan.
+Matnlar oddiy matn: HTML sifatida ko'rsatma (dangerouslySetInnerHTML taqiqlangan), qatorlarni white-space: pre-line bilan chiqar.
+4. API ma'lumotnomasi [TAYYOR]
+4.1. Mijoz endpoint'lari (login kerak emas)
+Metod va yo'l
+Parametrlar
+Javob
+GET /api/public/categories
+lang
+Category[]
+GET /api/public/products
+categorySlug, search, minPrice, maxPrice, excludeAllergens (takrorlanadi: ?excludeAllergens=NUTS&excludeAllergens=MILK), diets (shunday), popular, isNew, discounted, available, sort (price_asc, price_desc, newest), page (0 dan), size (≤ 50, standart 12), lang
+Page<ProductCard>
+GET /api/public/products/{slug}
+lang
+ProductDetail
+GET /api/public/branches
+lang
+Branch[]
+GET /api/public/settings
+—
+PublicSettings
+GET /api/public/banners
+lang
+Promotion[] (bosh sahifa slayderi)
+GET /api/public/promotions
+lang
+Promotion[]
+GET /api/public/promotions/{slug}
+lang
+Promotion
+POST /api/public/orders
+lang, body OrderCreate
+201 + Order
+GET /api/public/orders/track/{token}
+lang
+Order
+POST /api/public/orders/track/{token}/cancel
+lang, body { reason?: string } (ixtiyoriy)
+Order
+GET /api/public/orders/track/{token}/stream
+—
+SSE oqimi (7.4-bo'lim)
+4.2. Asosiy shakllar
+type UnitType = 'PIECE' | 'KG';interface Category { id: number; name: string; slug: string; imageUrl: string | null }interface ProductCard {  id: number; name: string; slug: string; categorySlug: string;  price: number;                 // HOZIR to'lanadigan narx: 1 dona yoki 1 kg uchun  oldPrice: number | null;       // null emas bo'lsa: chegirma amalda, eski narx chizilib ko'rsatiladi  discountEndsAt: string | null; // null emas bo'lsa: tugashigacha taymer  weightLabel: string | null;    // masalan '1 kg' (faqat ma'lumot uchun matn)  imageUrl: string | null;  prepTimeMinutes: number;       // 0 = hozir tayyor  isAvailable: boolean; isPopular: boolean; isNew: boolean;  allergens: Allergen[]; dietTags: DietTag[];  unitType: UnitType; minQuantity: number; quantityStep: number;}interface ProductDetail extends Omit<ProductCard, 'categorySlug'> {  categoryId: number; categoryName: string; categorySlug: string;  description: string | null; ingredients: string | null;  imageUrls: string[];           // galereya (asosiy rasmdan tashqari)  calories: number | null;       // 100 grammga  shelfLifeHours: number | null; // saqlash muddati, soatlarda}interface Branch {  id: number; name: string; address: string; phone: string;  workHours: string | null; latitude: number | null; longitude: number | null;  imageUrl: string | null; isPickupAvailable: boolean;}interface PublicSettings {  phone: string; openTime: string; closeTime: string;   // 'HH:mm:ss'  isOpenNow: boolean;            // do'kon hozir ochiqmi (server hisoblaydi)  acceptingOrders: boolean;      // false: onlayn buyurtma vaqtincha yopiq  deliveryEnabled: boolean;      // false: faqat olib ketish  deliveryFee: number; freeDeliveryFrom: number | null;  minOrderAmount: number;        // 0 = cheklov yo'q  cakeMinAdvanceHours: number;  telegramUrl: string | null; instagramUrl: string | null;}interface Promotion {  id: number; title: string; slug: string; summary: string | null; description: string | null;  imageUrl: string | null; mobileImageUrl: string | null;  // telefon rasmi bo'lmasa, kompyuterniki keladi  linkUrl: string | null;        // '/...' sayt yo'li yoki https:// havola  activeTo: string | null;}interface OrderCreate {  customerName: string;                // ≤ 100 belgi  customerPhone: string;               // aynan +998XXXXXXXXX  orderType: 'PICKUP' | 'DELIVERY';  branchId?: number;                   // PICKUP'da majburiy  deliveryAddress?: string;            // DELIVERY'da majburiy, ≤ 300  latitude?: number; longitude?: number; // ikkalasi birga yoki ikkalasi ham yo'q  paymentMethod: 'CASH' | 'CARD';  comment?: string;                    // ≤ 500  items: { productId: number; quantity: number }[];  // 1..50 qator; NARX YUBORILMAYDI}interface Order {  orderNumber: string;           // 'MJ-1001'  trackingToken: string;         // kuzatuv havolasi uchun  status: OrderStatus; orderType: 'PICKUP' | 'DELIVERY';  customerName: string;  branchName: string | null; branchAddress: string | null; deliveryAddress: string | null;  paymentMethod: 'CASH' | 'CARD'; comment: string | null;  items: { productId: number; name: string; quantity: number; unitType: UnitType;           unitPrice: number; lineTotal: number }[];  itemsTotal: number; deliveryFee: number; totalAmount: number;  pickupCode: string | null;     // olib ketishda 4 xonali kod  estimatedReadyAt: string | null; cancelReason: string | null;  timeline: { status: OrderStatus; at: string }[];  createdAt: string;}
+Narx qoidasi: buyurtmada narxni faqat server hisoblaydi. Frontend savatda taxminiy summa ko'rsatadi, lekin so'rovga narx qo'shmaydi. Yakuniy summa serverdan keladigan Order javobida.
+4.3. Admin endpoint'lari (login kerak: ADMIN yoki STAFF)
+Bo'lim
+Endpoint'lar
+Kirish
+POST /api/admin/auth/login ({username, password} → {username, fullName, role}), POST /api/admin/auth/logout (204), GET /api/admin/auth/me
+Kategoriyalar
+GET, GET /{id}, POST, PUT /{id}, DELETE /{id} — /api/admin/categories. Ichida mahsuloti bor kategoriyani o'chirish 409 beradi
+Mahsulotlar
+/api/admin/products: GET (filtr: categoryId, search, available, popular, isNew, discounted, page, size, sort), GET /{id}, POST, PUT /{id}, `PATCH /{id}/availability?available=true
+Buyurtmalar
+GET /api/admin/orders (filtr: status, orderType, search — raqam, ism yoki telefon, dateFrom, dateTo — 2026-10-28, page, size), GET /{id}, PATCH /{id}/status ({status, note?})
+Aksiyalar
+/api/admin/promotions: GET, GET /{id}, POST, PUT /{id}, DELETE /{id}
+Filiallar
+/api/admin/branches: GET, GET /{id}, POST, PUT /{id}, DELETE /{id}
+Sozlamalar
+GET /api/admin/settings, PUT /api/admin/settings (faqat ADMIN)
+Rasm yuklash
+`POST /api/admin/files/upload?folder=PRODUCTS
+Mahsulot formasi (ProductRequest) maydonlari: categoryId, nameUz, nameRu, slug?, descriptionUz?, descriptionRu?, price, oldPrice?, discountEndsAt?, weightLabel?, imageUrl?, imageUrls? (≤ 10), ingredientsUz?, ingredientsRu?, calories?, shelfLifeHours?, prepTimeMinutes?, isAvailable?, isPopular?, isNew?, sortOrder?, allergens?, dietTags?, unitType?, minQuantity?, quantityStep? (* majburiy).
+Tahrirlash qoidasi (muhim): PUT da tahrirlash formasi to'liq obyektni yuborsin. Chunki description*, price, oldPrice, discountEndsAt, weightLabel, imageUrl, ingredients*, calories, shelfLifeHours har safar almashtiriladi (null = tozalash). Faqat isAvailable, isPopular, isNew, sortOrder, prepTimeMinutes, unitType, minQuantity, quantityStep yuborilmasa eski qiymat saqlanadi. imageUrls, allergens, dietTags yuborilsa to'liq almashtiriladi, bo'sh massiv [] ularni tozalaydi.
+Mahsulot qoidalari (server tekshiradi, formada ham ko'rsat): oldPrice > price bo'lishi kerak; discountEndsAt faqat oldPrice bilan birga; donalik mahsulotda minQuantity va quantityStep butun son; minQuantity qadamga karrali. unitType o'zgarganda server standart qiymatlarni qo'yadi (kg uchun 0.5 va 0.5, dona uchun 1 va 1).
+5. Enum'lar va ularning yorliqlari
+type OrderStatus = 'NEW' | 'PRICE_PENDING' | 'CONFIRMED' | 'PREPARING' | 'READY' | 'DELIVERING' | 'COMPLETED' | 'CANCELLED';type Allergen = 'NUTS' | 'PEANUTS' | 'MILK' | 'GLUTEN' | 'EGG' | 'SOY' | 'SESAME';type DietTag = 'SUGAR_FREE' | 'GLUTEN_FREE' | 'LACTOSE_FREE' | 'VEGAN';
+Qiymat
+O'zbekcha
+Ruscha
+NEW
+Yangi
+Новый
+PRICE_PENDING
+Narx tasdiqlanishi kutilmoqda
+Ожидает подтверждения цены
+CONFIRMED
+Qabul qilindi
+Принят
+PREPARING
+Tayyorlanmoqda
+Готовится
+READY
+Tayyor
+Готов
+DELIVERING
+Yo'lda
+В пути
+COMPLETED
+Topshirildi
+Выдан
+CANCELLED
+Bekor qilindi
+Отменён
+NUTS / PEANUTS
+Yong'oq / Yer yong'oq
+Орехи / Арахис
+MILK / GLUTEN / EGG
+Sut / Gluten / Tuxum
+Молоко / Глютен / Яйцо
+SOY / SESAME
+Soya / Kunjut
+Соя / Кунжут
+SUGAR_FREE / GLUTEN_FREE
+Shakarsiz / Glutensiz
+Без сахара / Без глютена
+LACTOSE_FREE / VEGAN
+Laktozasiz / Vegan
+Без лактозы / Веган
+PIECE / KG
+dona / kg
+шт / кг
+CASH / CARD
+Naqd / Karta (kuryerga yoki do'konda)
+Наличные / Карта (курьеру или в магазине)
+6. Mijoz sayti: umumiy tuzilma va sahifalar
+6.1. Umumiy qobiq (layout)
+Header: logo, Katalog, Aksiyalar, Filiallar, til almashtirgich (UZ / RU), sevimlilar, savat ikonkasi (ustida mahsulot soni), telefon raqami (tel: havola). Mobilda ixcham header va pastki navigatsiya paneli: Bosh, Katalog, Savat, Buyurtmalarim.
+Footer: telefon, ish vaqti, Telegram va Instagram havolalari (PublicSettings dan), Yetkazib berish va to'lov, Maxfiylik siyosati, Ommaviy oferta.
+Holat chizig'i (header ostida, faqat kerak bo'lganda): acceptingOrders = false bo'lsa qizil/to'q chiziq: «Hozir onlayn buyurtma qabul qilinmayapti». isOpenNow = false (lekin acceptingOrders = true) bo'lsa yumshoq ogohlantirish: «Do'kon hozir yopiq. Buyurtma qabul qilinadi va ish vaqtida tayyorlanadi». Ish vaqti (openTime–closeTime) har doim ko'rinib tursin. PublicSettings ni brauzerda har 60 soniyada yangilab tur (isOpenNow keshda eskirib qolmasligi uchun).
+Til almashtirish: joriy sahifaning o'zida tilni almashtiradi (/uz/product/x ↔ /ru/product/x), tanlov cookie'da eslab qolinadi. Til belgilanmagan manzil (/) brauzer tiliga qarab /uz yoki /ru ga yo'naltirilsin (standart uz).
+6.2. Sahifalar ro'yxati
+Mijoz yo'llari /[lang]/... ko'rinishida (lang = uz yoki ru).
+Yo'l
+Maqsad
+Ma'lumot manbasi
+Renderlash
+/
+Bosh sahifa
+banners, categories, products (popular, isNew, discounted), branches
+SSR + keshlash (60 s)
+/catalog va /catalog/[categorySlug]
+Katalog, filtr, qidiruv
+categories, products
+SSR (birinchi sahifa) + klient
+/product/[slug]
+Mahsulot sahifasi
+products/{slug}
+SSR + keshlash (60 s)
+/promotions, /promotions/[slug]
+Aksiyalar va yangiliklar
+promotions
+SSR
+/branches
+Filiallar va xarita
+branches
+SSR
+/cart
+Savat
+localStorage + products/{slug}
+Klient
+/checkout
+Buyurtma rasmiylashtirish
+settings, branches
+Klient
+/order/[token]
+Buyurtmani kuzatish
+orders/track/{token} + SSE
+Klient, noindex
+/orders
+Mening buyurtmalarim
+localStorage'dagi tokenlar
+Klient, noindex
+/favorites
+Sevimlilar
+localStorage + products/{slug}
+Klient, noindex
+/about, /delivery-payment, /privacy, /offer
+Statik sahifalar
+Tarjima fayllari (+ settings)
+SSG
+404
+Brendga mos xato sahifa
+—
+—
+Statik sahifalarning haqiqiy matnini Akmal keyin beradi, hozircha o'rinbosar matn qo'y (delivery-payment sahifasida yetkazib berish narxi, bepul yetkazish chegarasi va to'lov usullari PublicSettings dan dinamik chiqsin).
+6.3. Bosh sahifa
+Bloklar tartibi (tepadan pastga):
+Banner slayderi (GET /banners): kompyuterda imageUrl, telefonda mobileImageUrl. Avtomatik aylanadi (6 s), swipe, nuqtalar; birinchi rasm priority bilan yuklansin (LCP). Bosilganda linkUrl ga o'tadi (/ bilan boshlansa ichki havola, https:// bo'lsa yangi oynada, rel='noopener noreferrer'). Banner bo'sh bo'lsa, brend hero-bloki ko'rsatiladi.
+Kategoriyalar: rasmli doira/kartochkalar, gorizontal aylantiriladigan qator.
+Mashhur (popular=true), Yangi (isNew=true) mahsulotlar: har biri 8 tagacha, «Hammasi» havolasi bilan.
+Chegirmalar (discounted=true): faqat mahsulot bo'lsa ko'rinadi, taymer bilan.
+Filiallar qisqa kartochkalari va xaritaga havola.
+Telegram/Instagram chaqirig'i.
+[REJADA] Bosh sahifada keyinroq qo'shiladi: tort konstruktoriga katta chaqiriq, Kun taklifi, sharhlar. Joyini hozirdan tayyor qoldir.
+6.4. Katalog
+Filtrlar: kategoriya; narx oralig'i (minPrice, maxPrice); allergenlar — «yo'qligi» mantig'ida («Yong'oqsiz» belgilansa excludeAllergens=NUTS ketadi); parhez belgilari (diets: Shakarsiz, Glutensiz va h.k.); «Faqat chegirmada» (discounted); «Faqat mavjudlar» (available=true). Standart holatda mavjud bo'lmaganlar ham ko'rinadi, ustida «Mavjud emas» belgisi bilan.
+Qidiruv: nom bo'yicha, 400 ms debounce, kamida 2 belgi.
+Saralash: Standart, Arzonroq, Qimmatroq, Yangilari (sort).
+Sahifalash: size=12, pastda «Yana yuklash» tugmasi (page oshiriladi); jami soni totalElements dan.
+Filtr holati URL query'da saqlansin (havola ulashish va Orqaga tugmasi to'g'ri ishlashi uchun). Filtrlangan sahifalar noindex, kategoriya sahifasining o'zi indekslansin.
+Bo'sh natija: «Hech narsa topilmadi» va filtrlarni tozalash tugmasi. Yuklanish paytida skeleton kartochkalar.
+Mobilda filtrlar pastdan chiqadigan panelda (bottom sheet).
+6.5. Mahsulot kartochkasi (komponent)
+Rasm (nisbat 1:1 yoki 4:3, bir xil), belgilar: «Yangi», «Mashhur», chegirma foizi (round((1 - price / oldPrice) * 100)%), «Mavjud emas» (rasm xiralashadi).
+Nom (2 qatorgacha), narx: 90 000 so'm / kg yoki 180 000 so'm (donalik mahsulotda birlik yozilmaydi yoki / dona). oldPrice bo'lsa eski narx chizilgan holda.
+Tezkor qo'shish: donalik mahsulotda «+» tugmasi minQuantity (odatda 1) qo'shadi; kg mahsulotda minQuantity (odatda 0.5 kg). Savatda bo'lsa, tugma o'rniga stepper (− 1.5 kg +) chiqadi, qadam quantityStep bo'yicha.
+Savatga qo'shilganda savat ikonkasiga nozik «uchib borish» animatsiyasi (prefers-reduced-motion bo'lsa o'chiq).
+Sevimlilar yuragi (localStorage, slug bo'yicha).
+6.6. Mahsulot sahifasi
+Galereya: imageUrl + imageUrls, swipe va kattalashtirish; rasm bo'lmasa placeholder.
+Narx bloki: joriy narx va birlik («1 kg uchun» / «1 dona uchun»), weightLabel (masalan, «1 kg») yordamchi matn sifatida. oldPrice bo'lsa chizilgan eski narx, foiz belgisi va discountEndsAt bo'yicha taymer (kun soat:daqiqa:soniya). Taymer nolga yetganda sahifa ma'lumotini qayta ol (server narxni odatiy holatga qaytaradi).
+Miqdor tanlagich: quantityStep qadam bilan, minQuantity dan boshlab, 100 gacha. Yonida joriy summa (taxminiy).
+Tayyorlanish vaqti: prepTimeMinutes = 0 bo'lsa «Hozir tayyor», aks holda «Buyurtmadan keyin ~2 soatda tayyor bo'ladi» (daqiqani soat/daqiqaga aylantir).
+Tarkib va xavfsizlik: tarkib (ingredients), allergenlar (ikonka va matn, ajralib turadigan rangda), parhez belgilari, kaloriya («100 g da»), saqlash muddati (shelfLifeHours ni kun va soatga aylantir).
+Tavsif, ulashish (Web Share API; bo'lmasa Telegram va «Havolani nusxalash»), sevimlilar, breadcrumbs (Bosh › Kategoriya › Mahsulot).
+isAvailable = false: tugma o'chirilgan, «Mavjud emas» yozuvi.
+[REJADA] «Birga olinadi» tavsiyalari va sharhlar bloki uchun joy qoldir.
+6.7. Aksiyalar, filiallar, favorites, orders
+Aksiyalar: kartochkalar ro'yxati (rasm, sarlavha, qisqa tavsif, activeTo bo'lsa «tugashiga X kun»). Aksiya sahifasida to'liq matn va katta rasm; linkUrl bo'lsa «Batafsil» tugmasi.
+Filiallar: kartochka: nom, manzil, telefon (tel:), ish vaqti, rasm; «Xaritada ochish» — https://www.google.com/maps?q={lat},{lng}. Koordinata bo'lsa, xarita iframe (https://www.google.com/maps?q={lat},{lng}&output=embed, loading='lazy'). API kaliti talab qilinmasin.
+Sevimlilar: ro'yxat localStorageda (slug'lar); sahifa ochilganda har bir slug uchun mahsulot ma'lumoti olinadi, topilmaganlari ro'yxatdan olib tashlanadi.
+Mening buyurtmalarim: localStorageda oxirgi 20 ta trackingToken; har biri uchun qisqa holat (raqam, sana, holat, jami) track orqali olinadi; 404 bo'lganlari ro'yxatdan chiqariladi. Kirish (login) yo'q.
+7. Savat, buyurtma berish va kuzatuv (eng muhim oqim)
+7.1. Savat
+Zustand + localStorage, versiyalangan kalit (mujiza-cart-v1). Qatorda faqat: productId, slug, quantity va oxirgi ma'lum narx nusxasi saqlanadi (nom, rasm, narx savat ochilganda yangilanadi).
+Miqdor o'zgarishi qadam bo'yicha. Eng kam miqdordan pastga tushganda qatorni olib tashlashni taklif qil. Eng ko'pi 100 (dona yoki kg).
+Aniq hisob: miqdor va narx bilan ishlashda float xatolaridan saqlan (decimal.js yoki butun sonlarga o'tkazib hisobla). Qator summasi = narx × miqdor, butun so'mga yaxlitlanadi (0.5 va undan ko'p bo'lsa yuqoriga): server ham shunday hisoblaydi.
+Savat sahifasi ochilganda har bir mahsulotni GET /products/{slug} bilan yangila: narx o'zgargan bo'lsa qatorda belgi ko'rsat; mahsulot mavjud emas yoki topilmasa, ogohlantirish va «Olib tashlash» tugmasi chiqsin. Mavjud bo'lmagan mahsulot turganda checkout bloklansin.
+Xulosa: mahsulotlar summasi. Agar minOrderAmount > 0 va summa kam bo'lsa, «Yana X so'm qo'shing» (progress bilan) va checkout tugmasi o'chiq. Yetkazib berish tanlanganda freeDeliveryFrom ga qadar «Bepul yetkazishgacha X so'm qoldi» ko'rsatilsin.
+Narxlash mantig'ini bitta joyda (lib/pricing.ts) yoz va testla: keyinchalik backend savatni hisoblab beradigan endpoint chiqarsa, faqat shu fayl almashadi.
+7.2. Buyurtma rasmiylashtirish (checkout)
+Mobilda qadamma-qadam, kompyuterda bitta sahifada bo'limlar bilan.
+Aloqa: ism, telefon. Telefon maskasi +998 (90) 123-45-67, serverga aynan +998901234567 ko'rinishida (probel va belgisiz) yuboriladi. Oldingi kiritilgan ism va telefon localStoragedan avtomatik to'ldiriladi («Eslab qolish» belgisi, standart yoqilgan).
+Olish usuli:
+Olib ketish: filial tanlanadi (isPickupAvailable = true bo'lganlari). Bitta filial bo'lsa, avtomatik tanlanadi.
+Yetkazib berish: faqat deliveryEnabled = true bo'lsa ko'rinadi. Manzil matni majburiy (≤ 300). «Joylashuvimni yuborish» tugmasi navigator.geolocation orqali latitude va longitude ni to'ldiradi (ruxsat berilmasa jim o'tkaz, xato ko'rsatma). Yetkazib berish narxi: mahsulotlar summasi freeDeliveryFrom ga yetsa 0, aks holda deliveryFee.
+Izoh (ixtiyoriy, ≤ 500).
+To'lov va tasdiq: Naqd yoki Karta («kuryerga yoki do'konda»: onlayn to'lov hozircha yo'q). Buyurtma xulosasi: mahsulotlar, yetkazib berish, jami.
+Qoidalar:
+«Buyurtma berish» bosilganda tugma o'chadi va aylanuvchi indikator chiqadi (ikki marta yuborilishidan himoya).
+acceptingOrders = false bo'lsa tugma o'chiq va sababi ko'rinadi. isOpenNow = false bo'lsa tugma ishlaydi, lekin ogohlantirish matni turadi.
+Muvaffaqiyat (201): savatni tozala, trackingToken ni «Mening buyurtmalarim» ga saqla, /order/{token} ga yo'naltir.
+Xatolar: 400 + fieldErrors → formadagi maydonlarga; 400 + message (masalan, «...hozir mavjud emas», «kamida 0.5 kg», «Minimal buyurtma summasi») → toast va savatga qaytish; 429 → «Bu raqamdan juda ko'p buyurtma kutilmoqda, do'kon bilan bog'laning»; 500 → umumiy xabar.
+Kichik izoh matni: «Yakuniy summa buyurtma tasdiqlanganda serverda hisoblanadi.» Server summasi taxminiydan farq qilsa, kuzatuv sahifasidagi summa asosiy.
+7.3. Buyurtma kuzatuv sahifasi (/order/[token])
+Tepada: buyurtma raqami (MJ-1001, nusxalash tugmasi bilan), joriy holat nishoni, taxminiy tayyor bo'lish vaqti (estimatedReadyAt, masalan, «bugun 15:09»). Olib ketishda katta pickupCode va yozuv: «Do'konda shu kodni ayting».
+Bosqichlar chizig'i (stepper):
+Olib ketish: Yangi → Qabul qilindi → Tayyorlanmoqda → Tayyor → Topshirildi.
+Yetkazib berish: Yangi → Qabul qilindi → Tayyorlanmoqda → Tayyor → Yo'lda → Topshirildi.
+Bajarilgan bosqichlar yonida vaqti (timeline[].at), hozirgisi ajratilgan. CANCELLED bo'lsa stepper o'rniga qizil holat va cancelReason.
+Tarkib: mahsulotlar (nom, miqdor va birlik, narx), yetkazib berish narxi, jami; olish joyi (filial nomi va manzili) yoki yetkazish manzili; to'lov usuli; izoh.
+Aloqa: do'kon telefoni (tel:), Telegram havolasi.
+Bekor qilish: faqat NEW yoki PRICE_PENDING holatda «Buyurtmani bekor qilish» tugmasi (tasdiqlash oynasi, sabab ixtiyoriy) → POST .../cancel. Boshqa holatlarda tugma o'rniga: «Bekor qilish uchun do'kon bilan bog'laning: +998...». Server 409 qaytarsa ham shu xabarni ko'rsat.
+404 → «Buyurtma topilmadi» sahifasi. Sahifa noindex va keshlanmaydi.
+7.4. Real vaqt yangilanishi (SSE)
+EventSource('.../api/public/orders/track/{token}/stream'). Hodisalar: connected (ma'lumot ok) va status (ma'lumot: yangi holat nomi, masalan, CONFIRMED). Sarlavhasiz : ping qatorlar — aloqa tirik ekanini bildiradi, ularni e'tiborsiz qoldir.
+status kelganda GET track/{token} ni qayta ol (to'liq ma'lumot yangilansin), stepper'da nozik animatsiya va qisqa toast: «Buyurtmangiz qabul qilindi».
+Yakuniy holatda (COMPLETED, CANCELLED) server ulanishni o'zi yopadi: qayta ulanma.
+Ulanish uzilsa EventSource o'zi qayta urinadi. Ketma-ket 3 ta muvaffaqiyatsiz urinishdan keyin 15 soniyalik pollingga o't. Sahifa fonda bo'lsa (document.hidden) ulanishni to'xtat, qaytganda tikla va darrov yangilab ol.
+Server har 30 daqiqada ulanishni uzadi va har buyurtmaga ko'pi bilan 5 ta ulanish ruxsat etadi: bitta sahifa bitta ulanish ochsin.
+8. Admin panel (/admin)
+8.1. Umumiy qoidalar
+Yo'llar /admin/... (tilsiz). Admin interfeysi faqat o'zbek tilida (lotin). Hamma admin sahifa noindex, robots.txt da yopiq.
+Himoya: app/admin layout'i serverda sessiyani tekshirsin: so'rovdagi cookie'ni API_INTERNAL_URL/api/admin/auth/me ga uzatadi; 401 bo'lsa /admin/login ga yo'naltiradi. Login sahifasidan tashqari hamma sahifa shu tekshiruvdan o'tadi.
+Maket: kompyuterda chap menyu, telefonda burger menyu (xodim buyurtmalarni telefondan ko'radi, shuning uchun admin ham mobilda qulay bo'lsin). Tepada foydalanuvchi ismi, roli va «Chiqish» (POST /logout).
+Rollar: STAFF uchun «Sozlamalar» menyusi ko'rinmasin; to'g'ridan-to'g'ri kirsa 403 bo'lib, «Ruxsat yo'q» sahifasi chiqsin.
+Jadvallar mobilda kartochkalarga aylansin. Har bir ro'yxatda yuklanish (skeleton), bo'sh holat va xato holati bo'lsin. O'chirish va bekor qilish amallari tasdiqlash oynasi bilan. Muvaffaqiyatli amaldan keyin qisqa toast.
+Kiritish formalari: react-hook-form + zod (klient tekshiruvi serverdagiga mos), server fieldErrors ni mos maydonlarga qo'y.
+8.2. Kirish (/admin/login)
+Login va parol maydonlari, «Kirish» tugmasi (yuborilganda o'chadi). 401 → «Login yoki parol noto'g'ri». Muvaffaqiyatli bo'lsa /admin/orders ga o'tadi.
+8.3. Buyurtmalar (/admin/orders) — eng muhim sahifa
+Ro'yxat: raqam (MJ-1001), qancha vaqt oldin berilgani, mijoz ismi, telefon (tel:), tur belgisi (Olib ketish / Yetkazish), to'lov, jami summa, holat nishoni (har holat o'z rangida).
+Filtrlar: holat bo'yicha chiplar (Hammasi, Yangi, Qabul qilingan, Tayyorlanmoqda, Tayyor, Yo'lda, Yakunlangan, Bekor qilingan), tur, qidiruv (raqam, ism yoki telefon), sana oralig'i (dateFrom, dateTo), sahifalash (size=20).
+Yangi buyurtma signali: ro'yxat har 10 soniyada avtomatik yangilanadi (admin panel uchun SSE hozircha yo'q). Yangi buyurtma kelganda: ekranda belgi, tovush signali (brauzer cheklovi tufayli foydalanuvchi bir marta «Tovushni yoqish» tugmasini bosgan bo'lishi kerak) va brauzer tab sarlavhasida son: (2) Buyurtmalar.
+Buyurtma sahifasi (/admin/orders/[id]): mijoz va telefon, olish usuli (filial yoki yetkazish manzili va xaritada ochish havolasi https://www.google.com/maps?q={lat},{lng}), to'lov, izoh, pickupCode, mahsulotlar jadvali (miqdor birligi bilan, narx, qator summasi), summalar, holatlar tarixi (qaysi holat, kim o'zgartirgan, qachon; changedBy ni ko'rsat: customer, admin logini yoki telegram:@...).
+Holat tugmalari faqat ruxsat etilgan keyingi bosqich uchun ko'rinsin:
+Hozirgi holat
+Tugma (keyingi holat)
+NEW, PRICE_PENDING
+Qabul qilish (CONFIRMED)
+CONFIRMED
+Tayyorlashni boshlash (PREPARING)
+PREPARING
+Tayyor (READY)
+READY
+Olib ketishda: Topshirildi (COMPLETED). Yetkazishda: Yo'lga chiqdi (DELIVERING)
+DELIVERING
+Topshirildi (COMPLETED)
+COMPLETED, CANCELLED
+Tugma yo'q (buyurtma yakunlangan)
+Hamma tugallanmagan holatda qo'shimcha Bekor qilish tugmasi: oynada sabab majburiy (note). 409 kelsa (buyurtma boshqa joydan, masalan Telegramdan o'zgargan) xabarni toast qilib, buyurtmani qayta yukla.
+Chek: «Chop etish» tugmasi; @media print bilan 80 mm kenglikdagi sodda chek ko'rinishi (raqam, mahsulotlar, jami, manzil/filial, izoh).
+8.4. Mahsulotlar (/admin/products, /new, /[id])
+Ro'yxat: rasm, nom, kategoriya, narx va birlik (/ kg yoki / dona), Mavjud / Mavjud emas almashtirgichi (PATCH availability, darrov o'zgaradi, xatoda qaytariladi), Mashhur va Yangi belgilari. Qidiruv, kategoriya va holat filtrlari, sahifalash.
+Forma bo'limlari:
+Asosiy: kategoriya, nomi (uz va ru, ikkalasi majburiy), slug (bo'sh qoldirilsa, server nomdan yasaydi), tavsif (uz, ru).
+Narx va birlik: sotish birligi (Dona yoki Kilogramm), narx (birlikka qarab: «1 kg uchun narx» yoki «1 dona uchun narx» deb yozilsin), eng kam miqdor, qadam. Birlik o'zgarganda forma standart qiymatlarni o'zi qo'ysin (kg: 0.5 va 0.5, dona: 1 va 1). Donalik mahsulotda kasr qiymat kiritishga yo'l qo'yma.
+Chegirma: eski narx (hozirgi narxdan katta bo'lishi kerak) va tugash vaqti (datetime-local; faqat eski narx bilan birga).
+Rasmlar: asosiy rasm va galereya (≤ 10). Yuklash: POST /files/upload?folder=PRODUCTS, progress ko'rsatkichi, klientda oldindan tekshiruv (JPG, PNG, WEBP, ≤ 5 MB), yuklangach oldindan ko'rish. Galereya tartibini sudrab o'zgartirish.
+Tarkib va xususiyatlar: tarkib (uz, ru), kaloriya, saqlash muddati (soat), tayyorlanish vaqti (daqiqa), allergenlar va parhez belgilari (belgilash katakchalari).
+Ko'rsatish: mavjud, mashhur, yangi, saralash tartibi.
+Saqlashda to'liq obyekt yuboriladi (4.3 dagi qoida). Saqlangandan keyin ro'yxatga qaytadi. O'chirish tasdiqlash bilan.
+8.5. Boshqa bo'limlar
+Kategoriyalar: ro'yxat va oyna-forma (nomlar uz va ru, slug, rasm folder=CATEGORIES, tartib, faol). O'chirishda 409 (ichida mahsulot bor) xabarini ko'rsat.
+Aksiyalar: ro'yxatda holat nishoni (visibleNow va sanalardan: «Ko'rinyapti», «Kutilmoqda», «Tugagan», «O'chiq»). Forma: sarlavhalar (uz, ru), qisqa tavsif, to'liq matn, kompyuter va telefon rasmi (folder=BANNERS), havola (/ bilan boshlanadigan yo'l yoki https://; klientda ham tekshir), bosh sahifada ko'rsatish, boshlanish va tugash vaqti (tugash boshlanishdan keyin), tartib, faol.
+Filiallar: nom va manzil (uz, ru), telefon (+998...), ish vaqti matni, koordinatalar (ikkalasi birga yoki ikkalasi ham bo'sh), rasm (folder=BRANCHES), olib ketish mumkinmi, faol, tartib.
+Sozlamalar (faqat ADMIN): telefon, ochilish va yopilish soati (time), katta almashtirgich «Onlayn buyurtma qabul qilish» (acceptingOrders), yetkazib berish yoqilganmi, yetkazish narxi, bepul yetkazish chegarasi (bo'sh = bepul yetkazish yo'q), minimal buyurtma summasi, tort uchun oldindan buyurtma muddati (soat), Telegram va Instagram havolalari (https://...). Saqlashda PUT ga hamma maydon yuboriladi.
+Bosh sahifa (/admin): hozircha oddiy: «Yangi buyurtmalar» soni (orders?status=NEW javobidagi totalElements), bugungi buyurtmalar soni (dateFrom = bugun), tezkor havolalar. To'liq statistika va grafiklar [REJADA].
+9. Dizayn talablari
+Uslub: issiq, qaymoqli, premium qandolat hissi. Katta sifatli mahsulot rasmlari asosiy rol o'ynaydi; matn va bo'sh joy muvozanatli. axmad.uz dan funksiya, safiabakery.uz dan issiq uslub ilhomi olinadi, lekin dizayn o'ziga xos va nusxa emas.
+Ranglar (taklif; logotip kelganda almashtiriladi): qaymoq fon #FFF8EE, chuqur shokolad matn #3B2418, oltin aksent #C9A24B, to'q qizil asosiy tugma #9B2D30; muvaffaqiyat, ogohlantirish va xato ranglari. Hamma rang CSS o'zgaruvchilarida (design tokens) bo'lsin va bitta joydan boshqarilsin.
+Mavsumiy mavzu [REJADA]: ranglar o'zgaruvchilarda bo'lgani uchun keyinchalik data-theme atributi bilan (Navro'z, Hayit, 8-mart, Yangi yil) almashtiriladi. Arxitekturani hozirdan shunga moslab qur.
+Shriftlar: sarlavha uchun bezakli serif (masalan, Playfair Display yoki Cormorant), matn uchun toza sans-serif (Inter yoki Manrope). Lotin va kirill harflarini to'liq qo'llab-quvvatlashi shart. next/font bilan, display: swap.
+Komponentlar: yumshoq burchaklar (12–16 px), nozik soyalar, tugma balandligi kamida 44 px (barmoq uchun), kontrast WCAG AA.
+Animatsiya: nozik va ma'noli (kartochka hover'i, savatga qo'shish, bosqichlar chizig'i, skeleton). prefers-reduced-motion yoqilgan bo'lsa o'chiriladi. Animatsiya tezlikka xalaqit bermasin.
+Mobil-birinchi: dizayn 360 px kenglikdan boshlanadi; breakpoint'lar 640, 768, 1024, 1280. Pastki navigatsiya paneli mobilda.
+Qulaylik (a11y): to'g'ri sarlavha ierarxiyasi, klaviatura bilan boshqarish, ko'rinadigan fokus, rasmlarga alt, allergen belgilari faqat rangga yoki ikonkaga tayanmasin (yoniga matn).
+Rasmlarga aniq nisbat (aspect-ratio) berilsin, sahifa sakramasin (CLS ≈ 0).
+10. SEO, PWA va tezlik
+SEO: har sahifada generateMetadata (title, description, canonical, hreflang uz, ru va x-default, Open Graph, Twitter card). Mahsulot sahifasida og:image absolyut URL bo'lsin. JSON-LD: bosh sahifa va filiallarda Bakery / LocalBusiness, mahsulotda Product + Offer (narx, priceCurrency: UZS, availability), hamma ichki sahifada BreadcrumbList.
+sitemap.xml: dinamik (kategoriyalar, mahsulotlar (size=50 bilan sahifalab hammasini ol), aksiyalar, statik sahifalar), har til uchun. robots.txt: admin, order, orders, cart, checkout va favorites yopiq.
+Telegram va Instagram havola ko'rinishi: mahsulot va aksiya havolasi rasm, nom va narx bilan chiroyli chiqishi shart (Open Graph to'g'ri bo'lsa, shunday bo'ladi). Qabul qilishda real Telegram'da sinab ko'r.
+PWA: web manifest (nom, qisqa nom, ikonkalar 192 va 512 + maskable, theme_color, start_url: /uz), service worker (Serwist yoki shunga o'xshash): statik fayllar keshi, oflayn holatda chiroyli «Internet yo'q» sahifasi. API so'rovlari va buyurtma ma'lumotlari keshlanmasin. «Ilovani o'rnatish» taklifi bezovta qilmasin (yopilsa, 30 kun qayta ko'rsatilmasin).
+Tezlik: Lighthouse mobil natijasi (Performance, SEO, Accessibility, Best Practices) har biri 90 dan yuqori; LCP < 2.5 s. next/image (to'g'ri sizes, birinchi ekran rasmi priority, qolganlari lazy), og'ir kutubxonalar dynamic import bilan (slayder, rasm kattalashtirish), next/font.
+Keshlash: kategoriya, mahsulot va aksiya sahifalari revalidate: 60; savat, checkout, kuzatuv va admin no-store. Admin o'zgartirgach mijoz saytida 60 soniyagacha eski ma'lumot ko'rinishi mumkin: bu qabul qilinadi.
+11. Xavfsizlik
+API javobidagi matnlarni HTML sifatida chiqarma (dangerouslySetInnerHTML taqiqlangan). linkUrl faqat / yoki http(s):// bilan boshlansa ishlatilsin (backend ham tekshiradi, frontend ham tekshirsin). Tashqi havolalarda rel='noopener noreferrer'.
+Frontendda hech qanday maxfiy kalit yoki token bo'lmasin (admin tokeni httpOnly cookie'da). .env GitHub'ga tushmasin.
+Security headerlar (next.config headers()): X-Content-Type-Options: nosniff, Referrer-Policy, Permissions-Policy (geolokatsiya faqat o'z saytiga), frame-ancestors 'none', mos Content-Security-Policy (Google Maps iframe uchun frame-src ruxsati bilan).
+Formalar ikki marta yuborilmasin; kiritilgan ism va telefon trim qilinsin.
+12. [REJADA] Backend'da keyin chiqadigan funksiyalar
+Quyidagilarning API'si hali tayyor emas. UI komponentlari, tarjimalar va funksiya bayroqlarini oldindan tayyorla, lekin API ulanmaguncha chaqirma. Akmal «X tayyor» deganda tegishli bo'limni ulaysan va Swagger bo'yicha aniqlashtirasan.
+Funksiya
+UI nima qiladi
+Taxminiy API (aniqlashtiriladi)
+Promo kod
+Savat va checkoutda kod maydoni, chegirmani ko'rsatish
+POST /api/public/promo/validate, OrderCreate.promoCode
+Yetkazish vaqt oynalari
+Sana va vaqt oralig'i tanlagich (band oraliqlar o'chiq)
+GET /api/public/delivery/slots?date=, buyurtmada sana va oraliq
+Sovg'a rejimi
+«Sovg'a sifatida» belgisi, qabul qiluvchi ismi va telefoni, tabrik matni, anonim yuborish
+OrderCreate ga yangi maydonlar
+Tort konstruktori
+Qadamma-qadam: tur, vazn, ta'm, krem, bezak, yozuv, namuna rasm; jonli narx; buyurtma PRICE_PENDING holatida admin tasdig'ini kutadi
+GET /api/public/cake-builder/config, POST .../price
+Keytering so'rovi
+To'y va tadbirlar uchun forma
+POST /api/public/catering-requests
+Birga olinadi
+Mahsulot sahifasi va savatda tavsiyalar
+GET /api/public/products/{id}/recommendations
+Mavsumiy mavzu
+Rang mavzusini almashtirish
+PublicSettings.seasonTheme
+Sharhlar, ballar, bayram eslatmasi
+Keyingi versiya
+—
+Admin: statistika
+Dashboard grafiklari, buyurtma cheki (PDF), Excel eksport, xodimlar boshqaruvi, o'zgarishlar tarixi
+/api/admin/analytics/... va boshqalar
+13. Loyiha tuzilmasi va topshirish
+Repo: alohida mujiza-frontend (GitHub). Taklif etilgan papkalar: app/[lang]/... (mijoz sayti), app/admin/..., components/, lib/api/ (generatsiya qilingan tiplar va klient), lib/pricing.ts, lib/format.ts (pul, miqdor, vaqt), messages/uz.json va ru.json, stores/ (savat, sevimlilar, buyurtmalarim).
+Fayllar: README.md (ishga tushirish, muhit o'zgaruvchilari, npm run api:types), .env.example, Dockerfile (standalone, alpine, oddiy foydalanuvchi bilan), docker-compose uchun servis namunasi.
+Skriptlar: dev, build, lint, typecheck, test:e2e, api:types.
+Kichik va mazmunli commit'lar (conventional commits). Har bosqich oxirida ishlaydigan holat.
+14. Bosqichlar
+Asos: loyiha, Tailwind va shadcn/ui, dizayn tokenlari, i18n, umumiy qobiq (header, footer, mobil panel), API klient va tiplar, xato va yuklanish komponentlari.
+Katalog va mahsulot sahifasi: filtr, qidiruv, sahifalash, SSR va SEO.
+Savat, checkout va kuzatuv (SSE): to'liq buyurtma oqimi va uning Playwright testi.
+Bosh sahifa, aksiyalar, filiallar, statik sahifalar, sevimlilar, mening buyurtmalarim.
+Admin panel: kirish, buyurtmalar, mahsulotlar, kategoriyalar, aksiyalar, filiallar, sozlamalar.
+SEO, PWA, tezlik sozlash, Lighthouse, Docker.
+[REJADA] funksiyalar (backend chiqqach).
+Har bosqich oxirida: ishlaydigan demo va qisqa hisobot (nima qilindi, nima qoldi, savollar).
+15. Qabul mezonlari
+Mijoz oqimi (katalog → mahsulot → savat → checkout (olib ketish va yetkazib berish) → kuzatuv) o'zbek va rus tillarida xatosiz ishlaydi.
+Kilogrammli mahsulot (0.5 qadam bilan) va donalik mahsulot to'g'ri hisoblanadi; kuzatuv sahifasidagi summa serverdagi bilan bir xil.
+Buyurtma holati admin yoki Telegram orqali o'zgarganda kuzatuv sahifasi bir necha soniyada o'zi yangilanadi.
+acceptingOrders = false va deliveryEnabled = false holatlari to'g'ri ishlaydi; mavjud bo'lmagan mahsulotni buyurtma qilib bo'lmaydi.
+Admin: holat faqat ruxsat etilgan bosqichlarda o'zgaradi; mahsulot rasm yuklash bilan qo'shiladi va tahrirlanadi; STAFF sozlamalarga kira olmaydi.
+Telefonda (360 px) hamma sahifa qulay; Lighthouse mobil natijasi har bir ko'rsatkich bo'yicha 90 dan yuqori.
+Kodda qattiq yozilgan matn yo'q, brauzer konsolida xato yo'q, build va typecheck xatosiz.
+Mahsulot havolasi Telegram'ga tashlansa, rasm, nom va narx bilan chiroyli ko'rinadi.
+16. Antigravity'ga birinchi xabar (nusxalab yubor)
+Sen Mujiza 777 onlayn qandolat do'koni uchun frontend quryapsan.Stek: Next.js (App Router) + TypeScript + Tailwind + next-intl.To'liq topshiriq shu hujjatda. Quyidagicha ishla:1) Hujjatni oxirigacha diqqat bilan o'qi.2) Backend OpenAPI manzili: http://localhost:8081/v3/api-docs. Tiplarni shundan generatsiya qil, qo'lda tip yozma.3) 14-bo'limdagi 1-bosqichdan boshla. Har bosqich oxirida ishlaydigan demo va qisqa hisobot ber.4) [REJADA] bo'limlarni hozir API'ga ulama, faqat UI va bayroqlarini tayyorla.5) Noaniq joyda taxmin qilma, savol ber.
+17. Yangilanish (v2): qo'shimcha tayyor API'lar [TAYYOR]
+Bu bo'lim 12-bo'limdagi [REJADA] jadvalini almashtiradi: quyidagi funksiyalar backend'da tayyor. /v3/api-docs dan tiplarni qayta generatsiya qil (npm run api:types). 4.2 va 4.3 dagi shakllarga qo'shimchalar ham shu yerda.
+17.1. Yangi mijoz endpoint'lari
+Metod va yo'l
+Parametrlar
+Javob
+GET /api/public/delivery/slots
+date (YYYY-MM-DD, bugundan 14 kun ichida), prepMinutes (savatdagi eng uzoq tayyorlanish vaqti, standart 0)
+DeliverySlot[]
+POST /api/public/promo/validate
+body { code, itemsTotal, customerPhone? }
+PromoValidateResult (yaroqsiz kodda ham 200, ichida valid: false)
+POST /api/public/catering-requests
+body (17.5-bo'lim)
+201 { id }
+GET /api/public/cake-builder/config
+lang
+CakeConfig
+POST /api/public/cake-builder/price
+lang, body { cakeTypeId, weightKg, optionIds? }
+CakePrice
+POST /api/public/files/cake-reference
+multipart/form-data, maydon file (JPG, PNG, WEBP, ≤ 5 MB)
+201 { url }
+POST /api/public/cake-orders
+lang, body CakeOrderCreate
+201 Order (ichida cake)
+GET /api/public/products/{slug}/recommendations
+lang, limit (standart 4, ≤ 12)
+ProductCard[]
+Ochiq POST so'rovlarda IP bo'yicha limit bor: 429 kelsa, «Juda ko'p so'rov yuborildi, birozdan keyin urinib ko'ring» deb ko'rsat.
+17.2. Yangi va kengaytirilgan shakllar
+interface DeliverySlot {  id: number; startTime: string; endTime: string;   // 'HH:mm:ss'  available: boolean; remaining: number;  unavailableReason: 'FULL' | 'TOO_SOON' | null;   // band yoki tayyorlanishga vaqt yetmaydi}interface PromoValidateResult { valid: boolean; code: string; discountAmount: number; message: string | null }type CakeOptionKind = 'FLAVOR' | 'CREAM' | 'DECOR' | 'EXTRA';interface CakeConfig {  cakeMinAdvanceHours: number;  types: { id: number; name: string; imageUrl: string | null; basePricePerKg: number;           minWeightKg: number; maxWeightKg: number; weightStep: number; servingsPerKg: number | null }[];  groups: { kind: CakeOptionKind; required: boolean; maxChoices: number;            options: { id: number; name: string; imageUrl: string | null;                       priceType: 'PER_KG' | 'FIXED'; priceValue: number }[] }[];}interface CakePrice { weightKg: number; servings: number | null; total: number; lines: { label: string; amount: number }[] }interface CakeOrderCreate {  customerName: string; customerPhone: string; orderType: 'PICKUP' | 'DELIVERY';  branchId?: number; deliveryAddress?: string; latitude?: number; longitude?: number;  paymentMethod: 'CASH' | 'CARD'; comment?: string;  scheduledDate: string;            // tort kerak bo'ladigan sana, majburiy  slotId?: number;                  // faol oyna bo'lsa, yetkazishda majburiy  cakeTypeId: number; weightKg: number; optionIds?: number[];  inscription?: string;             // ≤ 100 belgi  referenceImageUrl?: string;       // faqat cake-reference orqali yuklangan '/uploads/cakes/...'}interface CakeDetails {  typeName: string; weightKg: number;  options: { kind: CakeOptionKind; name: string; amount: number }[];  inscription: string | null; referenceImageUrl: string | null;  calculatedPrice: number; finalPrice: number | null;  priceConfirmed: boolean; priceNote: string | null;}// OrderCreate (oddiy buyurtma) ga qo'shimcha ixtiyoriy maydonlar:interface OrderCreateExtra {  promoCode?: string;  scheduledDate?: string; slotId?: number;               // ikkalasi BIRGA yuboriladi  isGift?: boolean; isAnonymousGift?: boolean;  recipientName?: string; recipientPhone?: string; giftMessage?: string;}// Order (javob) ga qo'shimcha maydonlar:interface OrderExtra {  promoCode: string | null; discountAmount: number;  scheduledDate: string | null; slotStart: string | null; slotEnd: string | null;  isGift: boolean; isAnonymousGift: boolean; recipientName: string | null; giftMessage: string | null;  cake: CakeDetails | null;                               // oddiy buyurtmada null}// PublicSettings ga qo'shimcha:interface PublicSettingsExtra { seasonTheme: 'DEFAULT' | 'NAVRUZ' | 'HAYIT' | 'MARCH_8' | 'NEW_YEAR' }
+O'zbekcha/ruscha yorliqlar: FLAVOR Qatlam ta'mi / Вкус, CREAM Krem / Крем, DECOR Bezak / Декор, EXTRA Qo'shimcha xizmat / Дополнительно; FULL Band / Занято, TOO_SOON Tayyor bo'lmaydi / Не успеем.
+17.3. Buyurtma qoidalari (oddiy buyurtma uchun yangi)
+Vaqt oynasi: scheduledDate va slotId birga yuboriladi (yoki ikkalasi ham yo'q). Agar GET /delivery/slots?date=... ro'yxati bo'sh bo'lmasa (faol oynalar bor), yetkazishda sana va oyna majburiy, olib ketishda ixtiyoriy. Oyna tanlanganda estimatedReadyAt oyna boshlanishiga teng bo'ladi. available: false oynalarni tanlab bo'lmaydigan qilib ko'rsat va sababini yoz (FULL, TOO_SOON). Savat o'zgarganda prepMinutes ni qayta hisoblab, oynalarni yangila. Server oxirgi joyni bloklaydi: 409 («band») kelsa, oynalarni qayta yuklab, boshqasini tanlashni taklif qil.
+Promo kod: checkout'da kod maydoni va «Qo'llash» tugmasi. Tugma POST /promo/validate ni (itemsTotal va, kiritilgan bo'lsa, customerPhone bilan) chaqiradi va chegirmani ko'rsatadi; bu faqat oldindan ko'rish. Yakuniy chegirmani server buyurtma yaratilganda qayta hisoblaydi (OrderCreate.promoCode). Chegirma faqat mahsulotlar summasiga: jami = mahsulotlar − chegirma + yetkazish. Minimal summa va bepul yetkazish chegarasi chegirmadan oldingi summaga qarab tekshiriladi.
+Sovg'a: checkout'da «Sovg'a sifatida» belgisi (faqat yetkazishda ko'rinadi): qabul qiluvchi ismi va telefoni (+998...) majburiy, tabrik matni (≤ 300) va «Anonim» belgisi ixtiyoriy. Anonim bo'lsa: «Qabul qiluvchiga sizning ismingiz aytilmaydi» deb yoz. Kuzatuv sahifasida qabul qiluvchi ismi va tabrik matni ko'rsatiladi, telefoni emas.
+Tort buyurtmasi: holat PRICE_PENDING («Narx tasdiqlanishi kutilmoqda») bilan boshlanadi. Kuzatuv sahifasida cake bo'limi (tur, vazn, variantlar, yozuv, namuna rasm) va narx qatori: finalPrice yo'q bo'lsa «Hisoblangan narx: X so'm (do'kon tasdiqlagach o'zgarishi mumkin)», bor bo'lsa «Tasdiqlangan narx: Y so'm» va priceNote (agar bor). Narx tasdiqlangach holat CONFIRMED bo'ladi va oddiy buyurtma kabi davom etadi. Stepper'ga birinchi bosqich sifatida PRICE_PENDING ni qo'sh (tort buyurtmasi uchun).
+17.4. Tort konstruktori sahifasi (/cake-builder)
+Qadamma-qadam (mobilda stepper, kompyuterda chap tomonda tanlov, o'ngda doim ko'rinib turadigan narx xulosasi):
+Tur: config.types kartochkalari (rasm, nom, 1 kg narxi).
+Vazn: minWeightKg dan maxWeightKg gacha weightStep qadam bilan (slayder yoki −/+ tugmalari). Yonida taxminiy porsiya soni (servingsPerKg × vazn, bo'lsa).
+Variantlar: config.groups bo'yicha bo'limlar. Guruhda required: true bo'lsa, kamida bitta tanlanishi kerak; maxChoices dan ortiq tanlab bo'lmaydi (bittalik guruhda radio, ko'p tanlovda katakcha). Har variantda qo'shimcha narx: PER_KG bo'lsa «+20 000 so'm/kg», FIXED bo'lsa «+30 000 so'm», 0 bo'lsa «Bepul».
+Yozuv (≤ 100 belgi, hisoblagich bilan) va namuna rasm (ixtiyoriy): POST /files/cake-reference, progress va oldindan ko'rish; xato (400 format, 413 hajm, 429 limit) ko'rsat.
+Sana va vaqt: sana bugun + cakeMinAdvanceHours dan oldin bo'lmasin (ya'ni odatda kamida ertangi kun). Yetkazishda faol oyna bo'lsa, vaqt oynasi tanlanadi (17.3).
+Aloqa va olish usuli: ism, telefon, olib ketish (filial) yoki yetkazish (manzil), to'lov usuli, izoh — checkout bilan bir xil komponentlar.
+Tasdiq: xulosada narx qatorlari (CakePrice.lines) va jami; kichik izoh: «Narx taxminiy: do'kon buyurtmani ko'rib chiqib tasdiqlaydi, summa o'zgarishi mumkin». «Buyurtma berish» → POST /cake-orders → /order/{token}.
+Jonli narx: tanlov o'zgarganda (300 ms debounce) POST /cake-builder/price chaqirilsin; so'rov xatosi (400, masalan, «Qatlam ta'mi tanlanishi kerak») narx xulosasi ostida ko'rsatilsin, «Buyurtma berish» tugmasi o'chiq bo'lsin. Narxni frontendda hisoblama: faqat serverdan ol. Variantsiz guruhlar config.groups da bo'lmaydi, shuning uchun ularni ko'rsatma.
+Tort buyurtmasi uchun promo kod va sovg'a rejimi yo'q (hozircha).
+17.5. Keytering sahifasi (/catering)
+Forma maydonlari: ism, telefon (+998), tadbir turi (matn; takliflar: To'y, Tug'ilgan kun, Korporativ, Boshqa), sana (bugundan 2 yil ichida), mehmonlar soni (1–5000), taxminiy byudjet (ixtiyoriy, so'm), istaklar (ixtiyoriy, ≤ 1000). Body: { name, phone, eventType, eventDate, guestCount, budget?, comment? }. Muvaffaqiyat: «So'rovingiz qabul qilindi, tez orada siz bilan bog'lanamiz». 429 (ko'p so'rov) va 400 (fieldErrors) ni formada ko'rsat. Sahifa bosh sahifa va footer'dan havola qilinsin.
+17.6. Mavsumiy mavzu
+PublicSettings.seasonTheme qiymatiga qarab <html data-theme='navroz'> kabi atribut qo'y (DEFAULT bo'lsa atributsiz). Har mavzu faqat ranglar tokenlarini qayta belgilaydi (9.-bo'lim): NAVRUZ yashil va oltin, HAYIT zumrad va oltin, MARCH_8 pushti va binafsha, NEW_YEAR to'q ko'k, qizil va oq. Mavzu o'zgarganda sahifa qayta yuklanmasdan ham yangilanishi shart emas (har 60 soniyada settings yangilanganda qo'llansa yetarli). Bosh sahifa bannerlari aksiyalardan keladi (mavzuga bog'liq emas).
+17.7. Admin panel qo'shimchalari
+Bo'lim
+Endpoint'lar
+Rol
+Vaqt oynalari
+/api/admin/delivery-slots: GET, POST, PUT /{id}, DELETE /{id}; body { startTime, endTime, capacity, isActive? }
+ADMIN
+Promo kodlar
+/api/admin/promo-codes: GET, GET /{id}, POST, PUT /{id}, DELETE /{id}; maydonlar: code, description, discountType (PERCENT yoki FIXED), discountValue, maxDiscountAmount (faqat foizli), minOrderAmount, maxUses, firstOrderOnly, validFrom, validTo, isActive; javobda usedCount va usableNow. Kod matni yaratilgandan keyin o'zgarmaydi
+ADMIN
+Tort katalogi
+/api/admin/cake/types: GET, POST, PUT /{id}, DELETE /{id} (maydonlar: nameUz, nameRu, imageUrl, basePricePerKg, minWeightKg, maxWeightKg, weightStep, servingsPerKg, sortOrder, isActive). /api/admin/cake/options?kind=: GET, POST, PUT /{id}, DELETE /{id} (maydonlar: kind, nameUz, nameRu, imageUrl, priceType, priceValue, sortOrder, isActive)
+ADMIN
+Keytering so'rovlari
+GET /api/admin/catering-requests?status=&page=&size=, GET /{id}, PATCH /{id} body { status, adminNote? }; holatlar: NEW Yangi, CONTACTED Bog'lanildi, DONE Bajarildi, REJECTED Rad etildi
+ADMIN, STAFF
+Tort narxini tasdiqlash
+PATCH /api/admin/orders/{id}/confirm-price body { finalPrice?, note? }
+ADMIN, STAFF
+Sozlamalar
+PUT /api/admin/settings ga ixtiyoriy seasonTheme qo'shildi (yuborilmasa, hozirgisi saqlanadi): sozlamalar formasiga mavzu tanlagichi
+ADMIN
+Buyurtmalar sahifasiga o'zgarishlar: ro'yxat qatorida belgilar: «Tort» (isCakeOrder), «Sovg'a» (isGift), tanlangan sana va oyna (scheduledDate, slotStart–slotEnd). Buyurtma sahifasida: promo kod va chegirma qatori, vaqt oynasi, sovg'a bloki (qabul qiluvchi ismi, telefoni, tabrik matni, anonimlik belgisi), tort bloki (tur, vazn, variantlar, yozuv, namuna rasm kattalashtiriladigan, hisoblangan va yakuniy narx). PRICE_PENDING holatidagi tort buyurtmasida asosiy tugma «Narxni tasdiqlash»: oyna ichida yakuniy narx maydoni (boshlang'ich qiymat: hisoblangan narx, bo'sh qoldirilsa hisoblangani tasdiqlanadi) va izoh (narx o'zgartirilsa sababini yozish tavsiya etiladi). Boshqa holat tugmalari (9-bo'lim jadvali) o'zgarmaydi: PRICE_PENDING dan faqat CONFIRMED yoki CANCELLED ga o'tiladi.
+17.8. Statistika, xodimlar, o'zgarishlar tarixi [TAYYOR]
+Bo'lim
+Endpoint'lar
+Rol
+Statistika
+GET /api/admin/analytics/summary?from=&to= (sana YYYY-MM-DD, standart: oxirgi 30 kun, ko'pi bilan 366 kun), /daily, /hourly, /top-products?limit=
+ADMIN
+Buyurtmalarni Excel'ga yuklash
+GET /api/admin/orders/export (buyurtmalar ro'yxatidagi filtrlar bilan bir xil), javob .xlsx fayl (ko'pi bilan 5000 qator)
+ADMIN
+Xodimlar
+GET /api/admin/staff, POST, PUT /{id}; POST /api/admin/auth/change-password body { currentPassword, newPassword } (har bir foydalanuvchi o'zi uchun)
+ADMIN (change-password: hamma)
+O'zgarishlar tarixi
+GET /api/admin/audit-log?entityType=&actor=&page=&size=
+ADMIN
+interface AnalyticsSummary {  from: string; to: string; days: number;  ordersTotal: number; completed: number; cancelled: number; active: number;  revenue: number;            // faqat yakunlangan (COMPLETED) buyurtmalar jami summasi  inProgressAmount: number;   // hali yakunlanmagan, bekor qilinmagan buyurtmalar summasi  averageOrderValue: number;  pickupOrders: number; deliveryOrders: number; cakeOrders: number; giftOrders: number;  discountTotal: number;  previous: { ordersTotal: number; revenue: number;              ordersChangePercent: number | null; revenueChangePercent: number | null };}interface DailyPoint { date: string; orders: number; revenue: number }      // bo'sh kunlar 0 bilan to'ldirilganinterface HourPoint { hour: number; orders: number }                        // 0..23interface TopProduct { productId: number; name: string; unitType: UnitType; quantity: number; revenue: number }interface Staff { id: number; username: string; fullName: string; role: 'ADMIN' | 'STAFF' | 'COURIER';                  isActive: boolean; lastLoginAt: string | null; createdAt: string }interface AuditEntry { id: number; actor: string; action: string; entityType: string; entityId: number | null;                       details: string | null; createdAt: string }
+Dashboard (/admin) statistikadan: bugungi va tanlangan davr kartochkalari (buyurtmalar, tushum, o'rtacha chek, oldingi davr bilan foiz farqi), kunlik buyurtmalar va tushum grafigi, soat bo'yicha buyurtmalar, eng ko'p sotiladigan 10 mahsulot, olib ketish va yetkazish ulushi. Davr tanlagichi: Bugun, 7 kun, 30 kun, Boshqa. Grafik kutubxonasi: recharts (dynamic import).
+Xodimlar sahifasi: ro'yxat va forma (login, to'liq ism, rol, parol ≥ 10 belgi). Tahrirlashda faollikni o'chirish, rolni o'zgartirish va yangi parol belgilash mumkin. O'zingizni o'chirish yoki rolingizni o'zgartirish, shuningdek oxirgi faol ADMIN'ni olib tashlash serverda 400 beradi: xabarni ko'rsat. «Parolni o'zgartirish» oynasi header'dagi foydalanuvchi menyusida.
+Tarix sahifasi: jadval (vaqt, kim, nima qildi, tafsilot), entityType va actor filtri, sahifalash.
+Excel yuklash: buyurtmalar sahifasida joriy filtrlar bilan «Excel'ga yuklash» tugmasi (faqat ADMIN'ga ko'rinadi); fayl brauzerda yuklab olinadi (Content-Disposition).
+17.9. Tavsiyalar («Birga olinadi»)
+Mahsulot sahifasida va savatda «Birga olinadi» bloki: GET /products/{slug}/recommendations?limit=4. Server avval shu mahsulot bilan oxirgi 90 kunda birga buyurtma qilingan mahsulotlarni, yetmasa shu kategoriyadagi va umumiy mashhur mahsulotlarni qaytaradi (hammasi mavjud mahsulotlar). Natija bo'sh bo'lishi mumkin: shunda blok ko'rsatilmasin. Savatda har bir qator uchun alohida chaqirma qilma: faqat birinchi mahsulot uchun yoki mahsulot sahifasida ishlat.
