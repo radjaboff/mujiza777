@@ -43,10 +43,13 @@ jobs:
       - name: Print Surefire reports on failure
         if: failure()
         run: |
+          echo "### Test Failures" >> $GITHUB_STEP_SUMMARY
           for f in target/surefire-reports/*; do
             if [ -f "$f" ]; then
-              echo "=== $f ==="
-              cat "$f"
+              echo "#### $(basename "$f")" >> $GITHUB_STEP_SUMMARY
+              echo '```' >> $GITHUB_STEP_SUMMARY
+              cat "$f" >> $GITHUB_STEP_SUMMARY
+              echo '```' >> $GITHUB_STEP_SUMMARY
             fi
           done
 
