@@ -60,7 +60,9 @@ jobs:
           sudo apt-get install -y postgresql-client
           PGPASSWORD=ci-db-password psql -h localhost -U postgres -d mujiza_db -v ON_ERROR_STOP=1 \
             -c "CREATE ROLE ci_app LOGIN PASSWORD 'ci-app-password'" \
-            -c "ALTER DATABASE mujiza_db OWNER TO ci_app"
+            -c "ALTER DATABASE mujiza_db OWNER TO ci_app" \
+            -c "GRANT ALL ON SCHEMA public TO ci_app" \
+            -c "ALTER SCHEMA public OWNER TO ci_app"
 
       - name: PostgreSQL production smoke test
         env:
@@ -74,7 +76,20 @@ jobs:
           CORS_ALLOWED_ORIGINS: https://example.test
           PUBLIC_BASE_URL: https://example.test
           STORAGE_TYPE: local
-        run: ./mvnw -B -Dtest=PostgresDeploymentSmokeIT test
+        run: ./mvnw -B -Dtest=PostgresDeploymentSmokeIT -Dsurefire.excludes="" test
+
+      - name: Print smoke test report on failure
+        if: failure()
+        run: |
+          echo "### Smoke Test Failures" >> $GITHUB_STEP_SUMMARY
+          for f in target/surefire-reports/*.txt target/surefire-reports/*.dumpstream; do
+            if [ -f "$f" ]; then
+              echo "#### $(basename "$f")" >> $GITHUB_STEP_SUMMARY
+              echo '```' >> $GITHUB_STEP_SUMMARY
+              cat "$f" >> $GITHUB_STEP_SUMMARY
+              echo '```' >> $GITHUB_STEP_SUMMARY
+            fi
+          done
 
   frontend:
     runs-on: ubuntu-latest
