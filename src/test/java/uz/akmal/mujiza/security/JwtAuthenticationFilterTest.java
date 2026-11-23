@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import uz.akmal.mujiza.admin.entity.AdminUser;
 import uz.akmal.mujiza.admin.enums.AdminRole;
 import uz.akmal.mujiza.admin.repository.AdminUserRepository;
+import uz.akmal.mujiza.common.ShopTime;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -151,7 +152,7 @@ class JwtAuthenticationFilterTest {
         String token = jwtService.generateToken(admin);
 
         // Password was changed 5 minutes AFTER the token was issued
-        admin.setPasswordChangedAt(LocalDateTime.now().plusMinutes(5));
+        admin.setPasswordChangedAt(ShopTime.now().plusMinutes(5));
         when(userRepository.findByUsername("admin")).thenReturn(Optional.of(admin));
 
         MockHttpServletRequest request = new MockHttpServletRequest();

@@ -1,6 +1,7 @@
 package uz.akmal.mujiza.catalog.entity;
 
 import org.junit.jupiter.api.Test;
+import uz.akmal.mujiza.common.ShopTime;
 
 import java.time.LocalDateTime;
 
@@ -38,14 +39,14 @@ class ProductPriceTest {
 
     @Test
     void discountBeforeEndTimeIsActive() {
-        Product product = product(150_000, 200_000L, LocalDateTime.now().plusHours(1));
+        Product product = product(150_000, 200_000L, ShopTime.now().plusHours(1));
         assertThat(product.isDiscountActive()).isTrue();
         assertThat(product.getEffectivePrice()).isEqualTo(150_000);
     }
 
     @Test
     void expiredDiscountReturnsToOldPrice() {
-        Product product = product(150_000, 200_000L, LocalDateTime.now().minusHours(1));
+        Product product = product(150_000, 200_000L, ShopTime.now().minusHours(1));
         assertThat(product.isDiscountActive()).isFalse();
         assertThat(product.getEffectivePrice()).isEqualTo(200_000);
     }
