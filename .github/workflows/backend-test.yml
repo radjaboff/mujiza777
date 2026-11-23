@@ -76,7 +76,7 @@ jobs:
           CORS_ALLOWED_ORIGINS: https://example.test
           PUBLIC_BASE_URL: https://example.test
           STORAGE_TYPE: local
-        run: ./mvnw -B -Dtest=PostgresDeploymentSmokeIT -Dsurefire.excludes="" test
+        run: ./mvnw -B -Dtest.excludes=none -Dtest=PostgresDeploymentSmokeIT test
 
       - name: Print smoke test report on failure
         if: failure()
