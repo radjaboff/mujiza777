@@ -22,6 +22,7 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
+      TZ: Asia/Tashkent
       DB_PASSWORD: ci-db-password
       JWT_SECRET: ci-jwt-secret-must-be-at-least-32-bytes
       ADMIN_USERNAME: ci-admin
@@ -64,8 +65,9 @@ jobs:
             -c "GRANT ALL ON SCHEMA public TO ci_app" \
             -c "ALTER SCHEMA public OWNER TO ci_app"
 
-      - name: PostgreSQL production smoke test
+      - name: PostgreSQL production smoke test (Failsafe IT)
         env:
+          TZ: Asia/Tashkent
           SPRING_PROFILES_ACTIVE: prod
           DB_URL: jdbc:postgresql://localhost:5432/mujiza_db
           DB_USERNAME: ci_app
@@ -76,13 +78,13 @@ jobs:
           CORS_ALLOWED_ORIGINS: https://example.test
           PUBLIC_BASE_URL: https://example.test
           STORAGE_TYPE: local
-        run: ./mvnw -B -Dtest.excludes=none -Dtest=PostgresDeploymentSmokeIT test
+        run: ./mvnw -B failsafe:integration-test failsafe:verify
 
-      - name: Print smoke test report on failure
+      - name: Print test reports on failure
         if: failure()
         run: |
-          echo "### Smoke Test Failures" >> $GITHUB_STEP_SUMMARY
-          for f in target/surefire-reports/*.txt target/surefire-reports/*.dumpstream; do
+          echo "### Test Failures" >> $GITHUB_STEP_SUMMARY
+          for f in target/surefire-reports/*.txt target/surefire-reports/*.dumpstream target/failsafe-reports/*.txt target/failsafe-reports/*.dumpstream; do
             if [ -f "$f" ]; then
               echo "#### $(basename "$f")" >> $GITHUB_STEP_SUMMARY
               echo '```' >> $GITHUB_STEP_SUMMARY

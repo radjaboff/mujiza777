@@ -56,25 +56,34 @@ ON CONFLICT (id) DO NOTHING;
 SELECT setval('branches_id_seq', (SELECT MAX(id) FROM branches));
 
 -- 4. Aksiyalar va Promokodlarni kiritish
-INSERT INTO promotions (id, title_uz, title_ru, subtitle_uz, subtitle_ru, promo_code, discount_percent, badge_uz, badge_ru, image_url, active_from, active_to, sort_order, is_active, is_deleted, created_at, updated_at) VALUES
-(1, 'Mo‘jiza bilan Bahoriy Shirinliklar', 'Весеннее сладкое настроение', 'Barcha oilaviy va bayramona tortlarga 15% chegirma', 'Скидка 15% на все праздничные и семейные торты', 'BAHOR15', 15, 'Chegirma -15%', 'Скидка -15%', 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&auto=format&fit=crop&q=80', NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', 1, TRUE, FALSE, NOW(), NOW()),
-(2, 'Har 3-chi Bento-tort SOVG‘A!', '3-й бенто-торт в подарок!', '2 ta bento-tort xarid qiling va 3-chisini bepul oling', 'Закажите 2 бенто-торта и получите 3-й десерт бесплатно', 'BENTO2026', 33, 'Sovg‘a 1+1=3', 'Подарок 1+1=3', 'https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?w=800&auto=format&fit=crop&q=80', NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', 2, TRUE, FALSE, NOW(), NOW()),
-(3, 'Qarshi bo‘ylab BEPUL yetkazish', 'Бесплатная доставка по Карши', '150 000 so‘mdan yuqori buyurtmalarda yetkazish 0 so‘m', 'Бесплатная экспресс-доставка при заказе от 150 000 сум', 'BEPUL777', 100, 'Bepul yetkazish', 'Бесплатная доставка', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop&q=80', NOW() - INTERVAL '5 days', NOW() + INTERVAL '90 days', 3, TRUE, FALSE, NOW(), NOW())
+-- promotions jadvali (V9 va Promotion entity) sxemasiga to'liq moslangan
+INSERT INTO promotions (id, title_uz, title_ru, slug, summary_uz, summary_ru, description_uz, description_ru, image_url, show_on_home, active_from, active_to, sort_order, is_active, is_deleted, created_at, updated_at) VALUES
+(1, 'Mo‘jiza bilan Bahoriy Shirinliklar', 'Весеннее сладкое настроение', 'bahoriy-shirinliklar', 'Barcha oilaviy va bayramona tortlarga 15% chegirma', 'Скидка 15% на все праздничные и семейные торты', 'Barcha oilaviy va bayramona tortlarga 15% chegirma', 'Скидка 15% на все праздничные и семейные торты', 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800&auto=format&fit=crop&q=80', TRUE, NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', 1, TRUE, FALSE, NOW(), NOW()),
+(2, 'Har 3-chi Bento-tort SOVG‘A!', '3-й бенто-торт в подарок!', 'bento-tort-sovga', '2 ta bento-tort xarid qiling va 3-chisini bepul oling', 'Закажите 2 бенто-торта и получите 3-й десерт бесплатно', '2 ta bento-tort xarid qiling va 3-chisini bepul oling', 'Закажите 2 бенто-торта и получите 3-й десерт бесплатно', 'https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?w=800&auto=format&fit=crop&q=80', TRUE, NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', 2, TRUE, FALSE, NOW(), NOW()),
+(3, 'Qarshi bo‘ylab BEPUL yetkazish', 'Бесплатная доставка по Карши', 'bepul-yetkazish', '150 000 so‘mdan yuqori buyurtmalarda yetkazish 0 so‘m', 'Бесплатная экспресс-доставка при заказе от 150 000 сум', '150 000 so‘mdan yuqori buyurtmalarda yetkazish 0 so‘m', 'Бесплатная экспресс-доставка при заказе от 150 000 сум', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop&q=80', TRUE, NOW() - INTERVAL '5 days', NOW() + INTERVAL '90 days', 3, TRUE, FALSE, NOW(), NOW())
 ON CONFLICT (id) DO NOTHING;
 SELECT setval('promotions_id_seq', (SELECT MAX(id) FROM promotions));
 
-INSERT INTO promo_codes (code, discount_type, discount_value, min_order_amount, max_discount_amount, usage_limit, usage_count, valid_from, valid_to, is_active, is_deleted, created_at, updated_at) VALUES
-('BAHOR15', 'PERCENT', 15, 100000, 50000, 1000, 14, NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', TRUE, FALSE, NOW(), NOW()),
-('BENTO2026', 'FIXED', 30000, 120000, NULL, 500, 8, NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', TRUE, FALSE, NOW(), NOW()),
-('BEPUL777', 'FIXED', 15000, 150000, NULL, 2000, 25, NOW() - INTERVAL '5 days', NOW() + INTERVAL '90 days', TRUE, FALSE, NOW(), NOW())
+-- promo_codes jadvali (V11 va PromoCode entity) sxemasiga to'liq moslangan
+INSERT INTO promo_codes (code, description, discount_type, discount_value, min_order_amount, max_discount_amount, max_uses, used_count, first_order_only, valid_from, valid_to, is_active, is_deleted, created_at, updated_at) VALUES
+('BAHOR15', 'Bahoriy 15% chegirma', 'PERCENT', 15, 100000, 50000, 1000, 14, FALSE, NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', TRUE, FALSE, NOW(), NOW()),
+('BENTO2026', 'Bento tort 30000 chegirma', 'FIXED', 30000, 120000, NULL, 500, 8, FALSE, NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', TRUE, FALSE, NOW(), NOW()),
+('BEPUL777', 'Yetkazib berish bepul', 'FIXED', 15000, 150000, NULL, 2000, 25, FALSE, NOW() - INTERVAL '5 days', NOW() + INTERVAL '90 days', TRUE, FALSE, NOW(), NOW())
 ON CONFLICT (code) DO NOTHING;
 
--- 5. Do'kon sozlamalarini yangilash
-INSERT INTO shop_settings (id, min_order_amount, delivery_price, free_delivery_threshold, work_hours_start, work_hours_end, is_shop_open, phone, telegram_bot_username, instagram_url, created_at, updated_at) VALUES
-(1, 30000, 15000, 150000, '08:00', '23:00', TRUE, '+998 93 706 73 21', 'mujiza777_bot', 'https://instagram.com/mujizashirinliklari777', NOW(), NOW())
+-- 5. Do'kon sozlamalarini yangilash (V6 va ShopSettings entity sxemasiga to'liq moslangan)
+INSERT INTO shop_settings (id, phone, open_time, close_time, accepting_orders, delivery_enabled, delivery_fee, free_delivery_from, min_order_amount, cake_min_advance_hours, telegram_url, instagram_url, created_at, updated_at) VALUES
+(1, '+998 93 706 73 21', '08:00', '23:00', TRUE, TRUE, 15000, 150000, 30000, 24, 'https://t.me/mujiza777_bot', 'https://instagram.com/mujizashirinliklari777', NOW(), NOW())
 ON CONFLICT (id) DO UPDATE SET
-  min_order_amount = EXCLUDED.min_order_amount,
-  delivery_price = EXCLUDED.delivery_price,
-  free_delivery_threshold = EXCLUDED.free_delivery_threshold,
   phone = EXCLUDED.phone,
+  open_time = EXCLUDED.open_time,
+  close_time = EXCLUDED.close_time,
+  accepting_orders = EXCLUDED.accepting_orders,
+  delivery_enabled = EXCLUDED.delivery_enabled,
+  delivery_fee = EXCLUDED.delivery_fee,
+  free_delivery_from = EXCLUDED.free_delivery_from,
+  min_order_amount = EXCLUDED.min_order_amount,
+  cake_min_advance_hours = EXCLUDED.cake_min_advance_hours,
+  telegram_url = EXCLUDED.telegram_url,
+  instagram_url = EXCLUDED.instagram_url,
   updated_at = NOW();

@@ -3,6 +3,8 @@
 .env.*
 !.env.example
 *.local
+application-local.*
+**/application-local.*
 
 # Node & Frontend Build
 node_modules/
