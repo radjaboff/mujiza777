@@ -69,7 +69,7 @@ INSERT INTO promo_codes (code, description, discount_type, discount_value, min_o
 ('BAHOR15', 'Bahoriy 15% chegirma', 'PERCENT', 15, 100000, 50000, 1000, 14, FALSE, NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', TRUE, FALSE, NOW(), NOW()),
 ('BENTO2026', 'Bento tort 30000 chegirma', 'FIXED', 30000, 120000, NULL, 500, 8, FALSE, NOW() - INTERVAL '5 days', NOW() + INTERVAL '60 days', TRUE, FALSE, NOW(), NOW()),
 ('BEPUL777', 'Yetkazib berish bepul', 'FIXED', 15000, 150000, NULL, 2000, 25, FALSE, NOW() - INTERVAL '5 days', NOW() + INTERVAL '90 days', TRUE, FALSE, NOW(), NOW())
-ON CONFLICT (code) DO NOTHING;
+ON CONFLICT (code) WHERE is_deleted = FALSE DO NOTHING;
 
 -- 5. Do'kon sozlamalarini yangilash (V6 va ShopSettings entity sxemasiga to'liq moslangan)
 INSERT INTO shop_settings (id, phone, open_time, close_time, accepting_orders, delivery_enabled, delivery_fee, free_delivery_from, min_order_amount, cake_min_advance_hours, telegram_url, instagram_url, created_at, updated_at) VALUES
